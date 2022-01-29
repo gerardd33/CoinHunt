@@ -1,3 +1,38 @@
-<div class="container">
-  <p>main works!</p>
+<div class="container mt-5">
+
+  <div class="mt-4 mb-4 p-5 text-white rounded" id="jumbotron">
+    <h1 class="text-center">Welcome to Coin Hunt!</h1>
+    <p class="pt-5">There is another astonishing thing about Hobbits of old that
+      must be mentioned, an astonishing habit: they imbibed or
+      inhaled, through pipes of clay or wood, the smoke of the
+      burning leaves of a herb, which they called pipe-weed or leaf,
+      a variety probably of Nicotiana. A great deal of mystery
+      surrounds the origin of this peculiar custom, or ‘art’ as the
+      Hobbits preferred to call it. All that could be discovered about
+      it in antiquity was put together by Meriadoc Brandybuck
+      (later Master of Buckland), and since he and the tobacco of
+      the Southfarthing play a part in the history that follows, his
+      remarks in the introduction to his Herblore of the Shire may
+      be quoted.</p>
+  </div>
+
+
+  <h2 style="margin-top: 70px">Choose the difficulty.</h2>
+  <hr>
+  <div class="row mt-3">
+
+    <div class="col-sm-4">
+      <app-game-initiator [difficulty]="difficultyEnum.EASY"></app-game-initiator>
+    </div>
+
+    <div class="col-sm-4">
+      <app-game-initiator [difficulty]="difficultyEnum.MEDIUM"></app-game-initiator>
+    </div>
+
+    <div class="col-sm-4">
+      <app-game-initiator [difficulty]="difficultyEnum.HARD"></app-game-initiator>
+    </div>
+
+  </div>
+
 </div>

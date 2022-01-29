@@ -7,20 +7,26 @@ import { CommonModule } from '@angular/common';
 import { MainComponent } from './main/main.component';
 import { LeaderboardsComponent } from './leaderboards/leaderboards.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { GameInitiatorComponent } from './game-initiator/game-initiator.component';
+import { LevelInfoResource } from './resources/level-info/LevelInfoResource';
+import { MockLevelInfoResource } from './resources/level-info/MockLevelInfoResource';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
     LeaderboardsComponent,
-    NavbarComponent
+    NavbarComponent,
+    GameInitiatorComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule
   ],
-  providers: [],
+  providers: [
+    { provide: LevelInfoResource, useClass: MockLevelInfoResource }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
