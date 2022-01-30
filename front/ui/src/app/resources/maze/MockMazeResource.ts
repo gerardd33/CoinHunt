@@ -32,12 +32,28 @@ export class MockMazeResource extends MazeResource {
   retrieveMaze(difficulty: Difficulty): Observable<Maze> {
     switch (difficulty) {
       case Difficulty.EASY:
-        return of(this.easyMaze);
+        return of(this.deepCopyOf(this.easyMaze));
       case Difficulty.MEDIUM:
-        return of(this.mediumMaze);
+        return of(this.deepCopyOf(this.mediumMaze));
       case Difficulty.HARD:
-        return of(this.hardMaze);
+        return of(this.deepCopyOf(this.hardMaze));
     }
+  }
+
+  private deepCopyOf(maze: Maze): Maze {
+    let copy: Maze = [];
+
+    for (let row of maze) {
+      let rowCopy: Array<FieldContent> = [];
+
+      for (let item of row) {
+        rowCopy.push(item);
+      }
+
+      copy.push(rowCopy);
+    }
+
+    return copy;
   }
 
 }

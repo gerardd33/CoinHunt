@@ -16,6 +16,8 @@ import { MazeResource } from './resources/maze/MazeResource';
 import { MockMazeResource } from './resources/maze/MockMazeResource';
 import { MazeComponent } from './maze/maze.component';
 import { MazeFieldComponent } from './maze-field/maze-field.component';
+import { GamePersistenceService } from './game-persistence/GamePersistenceService';
+import { MockGamePersistenceService } from './game-persistence/MockGamePersistenceService';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { MazeFieldComponent } from './maze-field/maze-field.component';
   providers: [
     { provide: LevelInfoResource, useClass: MockLevelInfoResource },
     { provide: MazeResource, useClass: MockMazeResource },
+    { provide: GamePersistenceService, useClass: MockGamePersistenceService },
     PlayGameManager
   ],
   bootstrap: [AppComponent]

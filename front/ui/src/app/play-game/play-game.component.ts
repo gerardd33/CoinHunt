@@ -2,7 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { PlayGameManager } from '../PlayGameManager';
 import { Router } from '@angular/router';
 import { PlayGameStatus } from '../PlayGameStatus';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, Subject, Subscription, takeUntil } from 'rxjs';
 import { Maze } from '../data/FieldContent';
 import { StepDirection } from '../data/StepDirection';
 import { Difficulty } from '../data/Difficulty';
@@ -16,11 +16,17 @@ export class PlayGameComponent implements OnInit, OnDestroy {
 
   maze: Maze;
 
+  huntedCoins: number;
+
   status: PlayGameStatus;
 
   difficulty: Difficulty;
 
   destroyed$: Subject<void> = new Subject<void>();
+
+  intervalSubscription: Subscription;
+
+  timeToDisplay: number = 0;
 
   constructor(private route: Router,
               private playGameManager: PlayGameManager) {}
@@ -32,6 +38,8 @@ export class PlayGameComponent implements OnInit, OnDestroy {
 
     this.selectMaze();
     this.selectStatus();
+    this.selectHuntedCoins();
+
     this.difficulty = this.playGameManager.getDifficulty();
   }
 
@@ -63,8 +71,21 @@ export class PlayGameComponent implements OnInit, OnDestroy {
     return this.status === PlayGameStatus.NOT_STARTED;
   }
 
+  isFinished(): boolean {
+    return this.status === PlayGameStatus.FINISHED;
+  }
+
   startGame(): void {
     this.playGameManager.startGame();
+    this.startInterval();
+  }
+
+  abandonGame(): void {
+    this.playGameManager.abandonGame();
+  }
+
+  saveGame(): void {
+    this.playGameManager.saveGame();
   }
 
   getBackgroundClass(): string {
@@ -76,6 +97,10 @@ export class PlayGameComponent implements OnInit, OnDestroy {
       case Difficulty.HARD:
         return 'hard-background';
     }
+  }
+
+  getTotalNumberOfCoins(): number {
+    return this.playGameManager.getAllCoins();
   }
 
   private selectMaze() {
@@ -91,6 +116,26 @@ export class PlayGameComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(status => {
           this.status = status;
+
+          if (this.status == PlayGameStatus.FINISHED) {
+            this.intervalSubscription.unsubscribe();
+            this.timeToDisplay = this.playGameManager.getGameDuration();
+          }
+
         })
+  }
+
+  private selectHuntedCoins() {
+    this.playGameManager.selectHuntedCoins()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(value => {
+         this.huntedCoins = value;
+        })
+  }
+
+  private startInterval(): void {
+    this.intervalSubscription = interval(1000).pipe(takeUntil(this.destroyed$)).subscribe(value => {
+      this.timeToDisplay = value + 1;
+    });
   }
 }

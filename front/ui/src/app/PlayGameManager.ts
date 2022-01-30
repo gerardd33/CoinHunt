@@ -6,6 +6,9 @@ import { Observable, ReplaySubject, Subject, take } from 'rxjs';
 import { FieldContent, Maze } from './data/FieldContent';
 import { PlayGameStatus } from './PlayGameStatus';
 import { StepDirection } from './data/StepDirection';
+import { GameStep } from './data/GameStep';
+import { CompletedGame } from './data/CompletedGame';
+import { GamePersistenceService } from './game-persistence/GamePersistenceService';
 
 type Location = { x: number, y: number };
 
@@ -20,14 +23,27 @@ export class PlayGameManager {
 
   private playerLocation: Location;
 
-  private remainingCoins: number;
+  private allCoins: number;
+
+  private huntedCoins: number;
+
+  private steps: Array<GameStep>;
+
+  private gameStartTime: number;
+
+  private previousStepTime: number;
+
+  private gameEndTime: number;
 
   private status$: Subject<PlayGameStatus> = new ReplaySubject<PlayGameStatus>(1);
 
   private maze$: Subject<Maze> = new ReplaySubject<Maze>(1);
 
+  private huntedCoins$: Subject<number> = new ReplaySubject<number>(1);
+
   constructor(private router: Router,
-              private mazeResource: MazeResource) {
+              private mazeResource: MazeResource,
+              private gamePersistenceService: GamePersistenceService) {
   }
 
   initializeGame(difficulty: Difficulty): void {
@@ -37,9 +53,12 @@ export class PlayGameManager {
         this.difficulty = difficulty;
         this.maze = maze;
         this.playerLocation = this.findPlayer(maze);
-        this.remainingCoins = this.countCoins(maze);
+        this.allCoins = this.countCoins(maze);
+        this.huntedCoins = 0;
+        this.steps = [];
 
         this.notifyMazeChange();
+        this.notifyHuntedCoinsChange();
         this.nextStatus(PlayGameStatus.NOT_STARTED);
 
         this.router.navigate(['/play']).then();
@@ -47,15 +66,36 @@ export class PlayGameManager {
   }
 
   startGame(): void {
+    this.gameStartTime = Date.now();
+    this.previousStepTime = this.gameStartTime;
+
     this.nextStatus(PlayGameStatus.IN_PROGRESS);
+  }
+
+  abandonGame(): void {
+    this.nextStatus(PlayGameStatus.NONE);
+    this.router.navigate(['/main']).then();
+  }
+
+  saveGame(): void {
+    let completedGame: CompletedGame = this.createCompletedGame();
+    this.gamePersistenceService.saveGame(completedGame);
+
+    this.nextStatus(PlayGameStatus.NONE);
+    this.router.navigate(['/main']).then();
   }
 
   move(direction: StepDirection): void {
     let newPlayerLocation: Location = this.getNewPlayerLocation(direction);
     if (!this.isInsideMaze(newPlayerLocation) || this.getFieldOnLocation(newPlayerLocation) == FieldContent.WALL) return;
 
+    let now: number = Date.now();
+    let timeFromPreviousStep: number = now - this.previousStepTime;
+    this.previousStepTime = now;
+    this.steps.push({ direction: direction, millisecondsFromLastStep: timeFromPreviousStep });
+
     if (this.getFieldOnLocation(newPlayerLocation) == FieldContent.COIN) {
-      this.remainingCoins--;
+      this.huntedCoins++;
     }
 
     this.changeFieldOnLocation(newPlayerLocation, FieldContent.PLAYER);
@@ -63,7 +103,8 @@ export class PlayGameManager {
     this.playerLocation = newPlayerLocation;
 
     this.notifyMazeChange();
-    if (this.remainingCoins == 0) this.finishGame();
+    this.notifyHuntedCoinsChange();
+    if (this.huntedCoins == this.allCoins) this.finishGame(now);
   }
 
   getStatus(): PlayGameStatus {
@@ -74,6 +115,14 @@ export class PlayGameManager {
     return this.difficulty;
   }
 
+  getAllCoins(): number {
+    return this.allCoins;
+  }
+
+  getGameDuration(): number {
+    return (this.gameEndTime - this.gameStartTime) / 1000;
+  }
+
   selectStatus(): Observable<PlayGameStatus> {
     return this.status$.asObservable();
   }
@@ -82,12 +131,23 @@ export class PlayGameManager {
     return this.maze$.asObservable();
   }
 
-  private finishGame(): void {
+  selectHuntedCoins(): Observable<number> {
+    return this.huntedCoins$.asObservable();
+  }
+
+  private finishGame(time: number): void {
+    this.gameEndTime = time;
     this.nextStatus(PlayGameStatus.FINISHED);
+
+    console.log(this.steps);
   }
 
   private notifyMazeChange(): void {
     this.maze$.next(this.maze);
+  }
+
+  private notifyHuntedCoinsChange(): void {
+    this.huntedCoins$.next(this.huntedCoins);
   }
 
   private nextStatus(status: PlayGameStatus): void {
@@ -155,6 +215,16 @@ export class PlayGameManager {
     }
 
     return result;
+  }
+
+  private createCompletedGame(): CompletedGame {
+    return {
+      difficulty: this.difficulty,
+      steps: this.steps,
+      userId: 0, // TODO - change
+      totalTimeInMilliseconds: this.getGameDuration(),
+      startTime: this.gameStartTime
+    };
   }
 
 }

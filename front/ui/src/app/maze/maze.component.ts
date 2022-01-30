@@ -17,6 +17,8 @@ export class MazeComponent implements OnInit {
   }
 
   getGridValues() {
+    if (!this.maze) return {};
+
     let dimension: number = this.maze.length;
 
     return {
