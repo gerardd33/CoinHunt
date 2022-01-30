@@ -9,6 +9,7 @@ import { StepDirection } from './data/StepDirection';
 import { GameStep } from './data/GameStep';
 import { CompletedGame } from './data/CompletedGame';
 import { GamePersistenceService } from './game-persistence/GamePersistenceService';
+import { UserService } from './user/UserService';
 
 type Location = { x: number, y: number };
 
@@ -43,7 +44,8 @@ export class PlayGameManager {
 
   constructor(private router: Router,
               private mazeResource: MazeResource,
-              private gamePersistenceService: GamePersistenceService) {
+              private gamePersistenceService: GamePersistenceService,
+              private userService: UserService) {
   }
 
   initializeGame(difficulty: Difficulty): void {
@@ -221,7 +223,7 @@ export class PlayGameManager {
     return {
       difficulty: this.difficulty,
       steps: this.steps,
-      userId: 0, // TODO - change
+      userId: this.userService.getLoggedInUserId(),
       totalTimeInMilliseconds: this.getGameDuration(),
       startTime: this.gameStartTime
     };

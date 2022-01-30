@@ -4,6 +4,7 @@ import { LevelInfoResource } from '../resources/level-info/LevelInfoResource';
 import { LevelInfo } from '../data/LevelInfo';
 import { take } from 'rxjs';
 import { PlayGameManager } from '../PlayGameManager';
+import { UserService } from '../user/UserService';
 
 @Component({
   selector: 'app-game-initiator',
@@ -20,7 +21,8 @@ export class GameInitiatorComponent implements OnInit {
   levelInfo: LevelInfo;
 
   constructor(private levelInfoResource: LevelInfoResource,
-              private playGameManager: PlayGameManager) { }
+              private playGameManager: PlayGameManager,
+              private userService: UserService) { }
 
   ngOnInit(): void {
     this.retrieveLevelInfo();
@@ -39,6 +41,10 @@ export class GameInitiatorComponent implements OnInit {
 
   initializeGame(): void {
     this.playGameManager.initializeGame(this.difficulty);
+  }
+
+  isUserLoggedIn(): boolean {
+    return this.userService.isUserLoggedIn();
   }
 
   private retrieveLevelInfo(): void {

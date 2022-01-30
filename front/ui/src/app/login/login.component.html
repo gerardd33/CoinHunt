@@ -1,0 +1,38 @@
+<div class="container mt-5">
+  <div class="mt-4 mb-5 p-3 text-white rounded bg-success jumbotron login-jumbotron shadow">
+    <h3>Log in</h3>
+
+    <form>
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input class="form-control" [(ngModel)]="loginUsername" name="loginUsername">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" [(ngModel)]="loginPassword" name="loginPassword">
+      </div>
+      <button type="button" class="btn text-white submit-button shadow" (click)="logIn()">Log in</button>
+    </form>
+  </div>
+
+  <div class="mb-4 p-3 text-white rounded bg-success jumbotron register-jumbotron shadow">
+    <h3>Register</h3>
+
+    <form>
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="email" class="form-control" [(ngModel)]="registerUsername" name="registerUsername">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" [(ngModel)]="registerPassword" name="registerPassword">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Repeat password</label>
+        <input type="password" class="form-control" [(ngModel)]="registerRepeatedPassword" name="registerRepeatedPassword">
+      </div>
+      <button type="button" class="btn text-white submit-button shadow" (click)="register()">Create account</button>
+    </form>
+  </div>
+
+</div>

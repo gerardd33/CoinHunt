@@ -1,0 +1,7 @@
+<button class="btn btn-dark" (click)="performAction()">
+  <fa-icon [icon]="faUser" style="margin-right: 5px"></fa-icon>
+
+  <b *ngIf="isUserLoggedIn(); else loginText">{{getUsername()}}</b>
+  <ng-template #loginText>Log in</ng-template>
+
+</button>
