@@ -1,6 +1,6 @@
 import { LevelInfoResource } from './LevelInfoResource';
 import { Difficulty } from '../../data/Difficulty';
-import { delay, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { LevelInfo } from '../../data/LevelInfo';
 import { Injectable } from '@angular/core';
 

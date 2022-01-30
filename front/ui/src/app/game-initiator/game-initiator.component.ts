@@ -3,6 +3,7 @@ import { Difficulty } from '../data/Difficulty';
 import { LevelInfoResource } from '../resources/level-info/LevelInfoResource';
 import { LevelInfo } from '../data/LevelInfo';
 import { take } from 'rxjs';
+import { PlayGameManager } from '../PlayGameManager';
 
 @Component({
   selector: 'app-game-initiator',
@@ -18,7 +19,8 @@ export class GameInitiatorComponent implements OnInit {
 
   levelInfo: LevelInfo;
 
-  constructor(private levelInfoResource: LevelInfoResource) { }
+  constructor(private levelInfoResource: LevelInfoResource,
+              private playGameManager: PlayGameManager) { }
 
   ngOnInit(): void {
     this.retrieveLevelInfo();
@@ -35,15 +37,16 @@ export class GameInitiatorComponent implements OnInit {
     }
   }
 
+  initializeGame(): void {
+    this.playGameManager.initializeGame(this.difficulty);
+  }
+
   private retrieveLevelInfo(): void {
     this.levelInfoResource.retrieveLevelInfo(this.difficulty)
-      .pipe(
-        take(1)
-      )
+      .pipe(take(1))
       .subscribe(info => {
         this.levelInfo = info;
         this.levelInfoLoaded = true;
       });
   }
-
 }

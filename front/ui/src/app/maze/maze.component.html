@@ -1,0 +1,7 @@
+<div class="grid-container border border-2 border-white rounded rounded-2 shadow p-1"
+     [ngStyle]="getGridValues()">
+  <ng-container *ngFor="let row of maze">
+    <app-maze-field *ngFor="let field of row" [content]="field">
+    </app-maze-field>
+  </ng-container>
+</div>

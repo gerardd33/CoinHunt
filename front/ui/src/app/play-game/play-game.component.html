@@ -1,0 +1,11 @@
+<div class="play-window" [ngClass]="getBackgroundClass()">
+  <div class="container text-center pt-5 d-grid">
+
+    <h1 *ngIf="isNotStarted()" class="text-white">Are you ready?</h1>
+
+    <button *ngIf="isNotStarted()" class="btn btn-success btn-block" (click)="startGame()">Start!</button>
+
+    <app-maze *ngIf="!isNotStarted()" [maze]="maze"></app-maze>
+
+  </div>
+</div>
