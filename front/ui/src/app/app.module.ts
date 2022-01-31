@@ -25,6 +25,7 @@ import { NavbarUserIndicatorComponent } from './navbar-user-indicator/navbar-use
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { UserConfigurationComponent } from './user-configuration/user-configuration.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { UserConfigurationComponent } from './user-configuration/user-configurat
     MazeFieldComponent,
     NavbarUserIndicatorComponent,
     LoginComponent,
-    UserConfigurationComponent
+    UserConfigurationComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,
