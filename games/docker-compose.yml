@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  mongodb:
+    image: mongo:5.0.6
+    container_name: mongo-games-db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: coin-hunt
+      MONGO_INITDB_ROOT_PASSWORD: coin-hunt-auth
+      MONGO_INITDB_DATABASE: games-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
