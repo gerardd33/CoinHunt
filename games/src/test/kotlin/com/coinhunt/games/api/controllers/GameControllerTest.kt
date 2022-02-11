@@ -23,4 +23,15 @@ class GameControllerTest(
                 .andExpect(content().string(expectedResponse))
         }
     }
+
+    @Test
+    fun `returns 400 Bad Request for invalid difficulty levels`() {
+        val inputs = listOf("normal", "eas", "hardd")
+
+        for (difficulty in inputs) {
+            mockMvc.perform(get("/game/info/$difficulty"))
+                .andExpect(status().isBadRequest)
+                .andExpect(content().string("Unknown difficulty: $difficulty"))
+        }
+    }
 }

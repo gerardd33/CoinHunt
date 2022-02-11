@@ -1,5 +1,6 @@
 package com.coinhunt.games.api.controllers
 
+import com.coinhunt.games.api.errors.InvalidRequestException
 import com.coinhunt.games.common.Constants.Difficulty.EASY
 import com.coinhunt.games.common.Constants.Difficulty.HARD
 import com.coinhunt.games.common.Constants.Difficulty.MEDIUM
@@ -18,6 +19,6 @@ class GameController {
         EASY -> "Easy mode"
         MEDIUM -> "Medium mode"
         HARD -> "Hard mode"
-        else -> throw IllegalArgumentException("Unknown difficulty: $difficulty") // TODO return "bad request"
+        else -> throw InvalidRequestException("Unknown difficulty: $difficulty")
     }
 }
