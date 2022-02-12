@@ -1,5 +1,6 @@
 package com.coinhunt.games.api.errors
 
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -8,10 +9,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class ExceptionHandler {
 
-    @ExceptionHandler(InvalidRequestException::class)
-    protected fun handleInvalidRequest(ex: InvalidRequestException): ResponseEntity<String> {
+    @ExceptionHandler(BadRequestException::class)
+    fun handleInvalidRequest(ex: BadRequestException): ResponseEntity<String> {
         return ResponseEntity
-            .badRequest()
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ex.message)
+    }
+
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFound(ex: NotFoundException): ResponseEntity<String> {
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
             .body(ex.message)
     }
 
