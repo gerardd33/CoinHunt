@@ -1,0 +1,30 @@
+<div class="play-window" [ngClass]="getBackgroundClass()">
+  <div class="container text-center pt-5 d-grid">
+
+    <ng-container *ngIf="isNotStarted()">
+      <h1 class="text-white">Are you ready?</h1><br>
+      <button class="btn btn-success btn-block" (click)="startGame()">Start!</button>
+    </ng-container>
+
+    <app-maze *ngIf="!isNotStarted()" [maze]="maze"></app-maze>
+
+    <div style="margin-top: 70px" *ngIf="!isNotStarted()">
+      <table class="table stats-table shadow">
+        <tbody>
+          <tr>
+            <td>Time</td>
+            <td>Hunted Coins</td>
+          </tr>
+          <tr>
+            <td><h3>{{timeToDisplay}}s</h3></td>
+            <td><h3>{{huntedCoins}} / {{getTotalNumberOfCoins()}}</h3></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button *ngIf="!isNotStarted()" class="btn btn-danger btn-block w-50 m-auto shadow" (click)="abandonGame()">Abandon game</button>
+    <button *ngIf="isFinished()" class="btn btn-success btn-block w-50 m-auto shadow mt-2" (click)="saveGame()">Save game and return to main page</button>
+
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="container mt-5">
+  <h1>Best scores</h1>
+
+  <h3 class="mt-5">This week</h3>
+  <app-ranking [entries]="lastWeekEntries" (difficultyChanged)="updateLastWeekLeaderboard($event)"></app-ranking>
+
+  <h3 class="mt-5">All time</h3>
+  <app-ranking [entries]="allTimeEntries" (difficultyChanged)="updateAllTimeLeaderboard($event)"></app-ranking>
+
+</div>

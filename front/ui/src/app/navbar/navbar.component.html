@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow">
+  <div class="container-fluid">
+
+    <a role="button"
+       class="navbar-brand"
+       routerLink="/main">
+      Coin Hunt
+    </a>
+
+    <ul class="navbar-nav me-auto">
+
+      <li class="nav-item">
+        <a role="button" class="nav-link" routerLink="/main" routerLinkActive="active">Play</a>
+      </li>
+
+      <li class="nav-item">
+        <a role="button" class="nav-link" routerLink="/leaderboards" routerLinkActive="active">Leaderboards</a>
+      </li>
+
+    </ul>
+
+    <div class="d-flex">
+      <app-navbar-user-indicator></app-navbar-user-indicator>
+    </div>
+
+  </div>
+
+</nav>

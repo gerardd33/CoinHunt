@@ -1,0 +1,22 @@
+.play-window {
+  height: 100vh;
+}
+
+.easy-background {
+  background-image: linear-gradient(45deg, rgba(99, 235, 135, 1), rgba(50, 110, 253, 0.50));
+}
+
+.medium-background {
+  background-image: linear-gradient(45deg, rgba(147, 237, 234, 1), rgba(50, 110, 253, 0.50));
+}
+
+.hard-background {
+  background-image: linear-gradient(45deg, rgba(235, 99, 99, 1), rgba(50, 110, 253, 0.50));
+}
+
+.stats-table {
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}

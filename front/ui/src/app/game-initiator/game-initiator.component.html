@@ -1,0 +1,15 @@
+<div *ngIf="levelInfoLoaded" class="initiator-container p-3 rounded shadow d-grid" [ngClass]="[getBackgroundClass()]">
+  <h2>{{difficulty}}</h2>
+
+  <p>{{levelInfo.description}}</p>
+
+  Dimensions of the maze: {{levelInfo.mazeDimension}}x{{levelInfo.mazeDimension}}<br>
+  Number of coins: {{levelInfo.numberOfCoins}}<br>
+
+  <button class="mt-3 btn btn-success btn-block"
+          [disabled]="!isUserLoggedIn()"
+          (click)="initializeGame()">
+    Start the game!
+    <i *ngIf="!isUserLoggedIn()" class="text-warning">You have to log in first.</i>
+  </button>
+</div>

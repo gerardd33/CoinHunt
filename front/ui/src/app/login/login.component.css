@@ -1,0 +1,18 @@
+.jumbotron {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-jumbotron {
+  background-image: linear-gradient(180deg, rgba(99, 235, 135, 1), rgba(50, 110, 253, 0.50));
+}
+
+.register-jumbotron {
+  background-image: linear-gradient(180deg, rgba(147, 237, 234, 1), rgba(50, 110, 253, 0.50));
+  margin-top: 80px;
+}
+
+.submit-button {
+  background-color: #05990d;
+}
