@@ -1,4 +1,4 @@
-package com.coinhunt.games.persistence.model
+package com.coinhunt.games.persistence.domain.documents
 
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id

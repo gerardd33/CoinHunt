@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 
 @ControllerAdvice
-class RestResponseEntityExceptionHandler {
+class ExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException::class)
     protected fun handleInvalidRequest(ex: InvalidRequestException): ResponseEntity<String> {
