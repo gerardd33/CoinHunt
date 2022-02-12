@@ -15,7 +15,6 @@ class GameService(
     private val levelInfoRepository: LevelInfoRepository
 ) {
 
-    // TODO return DTO instead
     fun retrieveGameMetadata(difficulty: Difficulty): LevelInfo {
         return levelInfoRepository.findOneByDifficulty(difficulty)
             ?: throw NotFoundException("Level info for difficulty $difficulty could not be found")
