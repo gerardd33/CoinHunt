@@ -6,11 +6,13 @@ import { CompletedGameEntry } from '../data/CompletedGameEntry';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { UserService } from '../user/UserService';
 
 @Injectable()
 export class HttpGamePersistenceService extends GamePersistenceService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private userService: UserService) {
     super();
   }
 
@@ -26,7 +28,7 @@ export class HttpGamePersistenceService extends GamePersistenceService {
   saveGame(game: CompletedGame): Observable<any> {
     return this.http.post<CompletedGameEntry[]>(`${this.baseUrl}/api/game/save`, game, {
       headers: {
-        Authorization: "xd" // TODO
+        Authorization: this.userService.getToken() as string
       }
     });
   }

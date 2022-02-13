@@ -7,9 +7,9 @@
   Number of coins: {{levelInfo.numberOfCoins}}<br>
 
   <button class="mt-3 btn btn-success btn-block"
-          [disabled]="!isUserLoggedIn()"
+          [disabled]="!isUserLoggedIn"
           (click)="initializeGame()">
     Start the game!
-    <i *ngIf="!isUserLoggedIn()" class="text-warning">You have to log in first.</i>
+    <i *ngIf="!isUserLoggedIn" class="text-warning">You have to log in first.</i>
   </button>
 </div>

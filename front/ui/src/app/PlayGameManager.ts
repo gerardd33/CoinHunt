@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Difficulty } from './data/Difficulty';
 import { Router } from '@angular/router';
 import { MazeResource } from './resources/maze/MazeResource';
-import { Observable, ReplaySubject, Subject, take } from 'rxjs';
+import { map, Observable, ReplaySubject, Subject, take } from 'rxjs';
 import { FieldContent, Maze } from './data/FieldContent';
 import { PlayGameStatus } from './PlayGameStatus';
 import { StepDirection } from './data/StepDirection';
@@ -80,12 +80,14 @@ export class PlayGameManager {
   }
 
   saveGame(): void {
-    let completedGame: CompletedGame = this.createCompletedGame();
-    this.gamePersistenceService.saveGame(completedGame)
-        .pipe(take(1))
-        .subscribe(_ => {
-          this.nextStatus(PlayGameStatus.NONE);
-          this.router.navigate(['/main']).then();
+    this.createCompletedGame()
+        .subscribe(completedGame => {
+          this.gamePersistenceService.saveGame(completedGame)
+              .pipe(take(1))
+              .subscribe(_ => {
+                this.nextStatus(PlayGameStatus.NONE);
+                this.router.navigate(['/main']).then();
+              });
         });
   }
 
@@ -221,14 +223,19 @@ export class PlayGameManager {
     return result;
   }
 
-  private createCompletedGame(): CompletedGame {
-    return {
-      difficulty: this.difficulty,
-      steps: this.steps,
-      userId: this.userService.getLoggedInUserId(),
-      totalTimeInMilliseconds: this.getGameDuration(),
-      startTime: this.gameStartTime
-    };
+  private createCompletedGame(): Observable<CompletedGame> {
+    return this.userService.getLoggedInUserId().pipe(
+      take(1),
+      map(userId => {
+        return {
+          difficulty: this.difficulty,
+          steps: this.steps,
+          userId: userId,
+          totalTimeInMilliseconds: this.getGameDuration(),
+          startTime: this.gameStartTime
+        };
+      })
+    );
   }
 
 }

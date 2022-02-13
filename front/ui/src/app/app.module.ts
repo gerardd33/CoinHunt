@@ -15,9 +15,7 @@ import { MazeResource } from './resources/maze/MazeResource';
 import { MazeComponent } from './maze/maze.component';
 import { MazeFieldComponent } from './maze-field/maze-field.component';
 import { GamePersistenceService } from './game-persistence/GamePersistenceService';
-import { MockGamePersistenceService } from './game-persistence/MockGamePersistenceService';
 import { UserService } from './user/UserService';
-import { InMemoryUserService } from './user/InMemoryUserService';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NavbarUserIndicatorComponent } from './navbar-user-indicator/navbar-user-indicator.component';
 import { LoginComponent } from './login/login.component';
@@ -28,6 +26,7 @@ import { HttpLevelInfoResource } from './resources/level-info/HttpLevelInfoResou
 import { HttpClientModule } from '@angular/common/http';
 import { HttpMazeResource } from './resources/maze/HttpMazeResource';
 import { HttpGamePersistenceService } from './game-persistence/HttpGamePersistenceService';
+import { HttpUserService } from './user/HttpUserService';
 
 @NgModule({
   declarations: [
@@ -56,7 +55,7 @@ import { HttpGamePersistenceService } from './game-persistence/HttpGamePersisten
     { provide: LevelInfoResource, useClass: HttpLevelInfoResource },
     { provide: MazeResource, useClass: HttpMazeResource },
     { provide: GamePersistenceService, useClass: HttpGamePersistenceService },
-    { provide: UserService, useClass: InMemoryUserService },
+    { provide: UserService, useClass: HttpUserService },
     PlayGameManager
   ],
   bootstrap: [AppComponent]

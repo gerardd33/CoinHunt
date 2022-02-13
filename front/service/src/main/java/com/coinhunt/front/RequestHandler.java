@@ -1,5 +1,6 @@
 package com.coinhunt.front;
 
+import com.coinhunt.front.data.AuthTokenResponse;
 import com.coinhunt.front.data.CompletedGame;
 import com.coinhunt.front.data.CompletedGameEntry;
 import com.coinhunt.front.data.Credentials;
@@ -8,6 +9,7 @@ import com.coinhunt.front.data.FieldContent;
 import com.coinhunt.front.data.LevelInfo;
 import com.coinhunt.front.data.Statistics;
 import com.coinhunt.front.data.UserData;
+import com.coinhunt.front.data.UserIdResponse;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public class RequestHandler {
 			@RequestParam(value = "difficulty") String difficulty,
 			@RequestHeader(value = "Authorization") String authorizationHeader
 	) {
-		ResponseEntity<String> authenticationResponse = authenticate(authorizationHeader);
+		ResponseEntity<UserIdResponse> authenticationResponse = authenticate(authorizationHeader);
 
 		if (authenticationResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -64,7 +66,7 @@ public class RequestHandler {
 			@RequestBody CompletedGame completedGame,
 			@RequestHeader(value = "Authorization") String authorizationHeader
 	) {
-		ResponseEntity<String> authenticationResponse = authenticate(authorizationHeader);
+		ResponseEntity<UserIdResponse> authenticationResponse = authenticate(authorizationHeader);
 
 		if (authenticationResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -126,30 +128,30 @@ public class RequestHandler {
 	}
 
 	@PostMapping("api/account/register")
-	public ResponseEntity<String> handleRegisterRequest(@RequestBody Credentials credentials) {
+	public ResponseEntity<AuthTokenResponse> handleRegisterRequest(@RequestBody Credentials credentials) {
 		// TODO - call Users
 
-		return new ResponseEntity<>("I am a token!", HttpStatus.OK);
+		return new ResponseEntity<>(new AuthTokenResponse("I am a token!"), HttpStatus.OK);
 	}
 
 	@PostMapping("api/account/login")
-	public ResponseEntity<String> handleLoginRequest(@RequestBody Credentials credentials) {
+	public ResponseEntity<AuthTokenResponse> handleLoginRequest(@RequestBody Credentials credentials) {
 		// TODO - call Users
 
-		return new ResponseEntity<>("I am a token!", HttpStatus.OK);
+		return new ResponseEntity<>(new AuthTokenResponse("I am a token!"), HttpStatus.OK);
 	}
 
 	@GetMapping("api/account/auth")
-	public ResponseEntity<String> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
+	public ResponseEntity<UserIdResponse> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
 		// TODO - call Users
 
-		return new ResponseEntity<>("userrr1", HttpStatus.OK);
+		return new ResponseEntity<>(new UserIdResponse("userrr1"), HttpStatus.OK);
 	}
 
-	private ResponseEntity<String> authenticate(String authorizationHeader) {
+	private ResponseEntity<UserIdResponse> authenticate(String authorizationHeader) {
 		// TODO - call Users
 
-		return new ResponseEntity<>("userrr1", HttpStatus.OK);
+		return new ResponseEntity<>(new UserIdResponse("userrr1"), HttpStatus.OK);
 	}
 
 }
