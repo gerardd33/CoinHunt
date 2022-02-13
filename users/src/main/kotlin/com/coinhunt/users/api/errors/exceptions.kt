@@ -1,4 +1,4 @@
-package com.coinhunt.users.controller
+package com.coinhunt.users.api.errors
 
 sealed class UsersApiException(message: String) : Exception(message)
 

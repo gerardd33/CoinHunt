@@ -1,4 +1,4 @@
-package com.coinhunt.users.controller
+package com.coinhunt.users.api.controller
 
 import com.coinhunt.users.domain.UserData
 import com.coinhunt.users.service.UserService

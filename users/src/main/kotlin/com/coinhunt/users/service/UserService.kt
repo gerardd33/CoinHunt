@@ -1,7 +1,7 @@
 package com.coinhunt.users.service
 
-import com.coinhunt.users.controller.BadRequestException
-import com.coinhunt.users.controller.NotFoundException
+import com.coinhunt.users.api.errors.BadRequestException
+import com.coinhunt.users.api.errors.NotFoundException
 import com.coinhunt.users.domain.UserData
 import com.coinhunt.users.repository.UserDataRepository
 import org.springframework.stereotype.Service

@@ -1,4 +1,4 @@
-package com.coinhunt.users.controller
+package com.coinhunt.users.api.errors
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
