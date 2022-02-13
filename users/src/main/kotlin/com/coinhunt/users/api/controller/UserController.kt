@@ -23,4 +23,16 @@ class UserController(
   fun getUserData(@PathVariable userId: String): UserData {
     return userService.retrieveUserData(userId)
   }
+
+  // TODO implement actual JWT processing
+  @GetMapping("/login/{userId}")
+  fun loginUser(@PathVariable userId: String): String {
+    return "dummy JWT"
+  }
+
+  // TODO implement actual JWT processing
+  @GetMapping("/authenticate")
+  fun authenticateUser(@RequestBody jwt: String): String {
+    return "dummy corresponding userId"
+  }
 }
