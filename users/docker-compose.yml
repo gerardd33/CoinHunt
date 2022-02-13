@@ -5,10 +5,10 @@ services:
     build:
       context: ./
     ports:
-      - "9111:9111"
+      - "9122:9122"
     stop_signal: SIGINT
     environment:
-      GAMES_DATABASE: "database"
+      USERS_DATABASE: "database"
 
   database:
     image: mongo:5.0.6
@@ -16,8 +16,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "coin-hunt"
       MONGO_INITDB_ROOT_PASSWORD: "coin-hunt-auth"
-      MONGO_INITDB_DATABASE: "games-db"
+      MONGO_INITDB_DATABASE: "users-db"
     ports:
-      - "27017:27017"
+      - "27021:27017"
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
