@@ -1,9 +1,15 @@
-version: '3.7'
+version: "3.7"
 
 services:
-  mongodb:
+  app:
+    build:
+      context: ./
+    ports:
+      - "9111:9111"
+    stop_signal: SIGINT
+
+  database:
     image: mongo:5.0.6
-    container_name: mongo-games-db
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: coin-hunt
