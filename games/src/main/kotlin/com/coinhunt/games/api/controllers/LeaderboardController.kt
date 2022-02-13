@@ -23,4 +23,13 @@ class LeaderboardController(
     ): List<CompletedGame> {
         return leaderboardService.calculateLeaderboardTable(parseDifficulty(difficulty), filter)
     }
+
+    @GetMapping("/user/{userId}/{difficulty}/{filter}")
+    fun getLeaderboardTableForUser(
+        @PathVariable userId: String,
+        @PathVariable difficulty: String,
+        @PathVariable filter: CompletedGamesFilter
+    ): List<CompletedGame> {
+        return leaderboardService.calculateLeaderboardTableForUser(userId, parseDifficulty(difficulty), filter)
+    }
 }

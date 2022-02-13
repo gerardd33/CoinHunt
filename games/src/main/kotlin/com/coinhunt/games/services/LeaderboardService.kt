@@ -20,4 +20,12 @@ class LeaderboardService(
         return completedGameRepository.findAllSortedByLowestTotalTimeInMilliseconds()
             .take(LEADERBOARD_TABLE_SIZE)
     }
+
+    fun calculateLeaderboardTableForUser(
+        userId: String, parseDifficulty: Difficulty,
+        filter: CompletedGamesFilter
+    ): List<CompletedGame> {
+        return completedGameRepository.findAllByUserIdSortedByLowestTotalTimeInMilliseconds(userId)
+            .take(LEADERBOARD_TABLE_SIZE)
+    }
 }
