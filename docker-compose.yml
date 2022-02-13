@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+  games-api:
+    build:
+      context: ./games/
+    ports:
+      - "9111:9111"
+    stop_signal: SIGINT
+    environment:
+      GAMES_DATABASE: "games-database"
+    depends_on:
+      - games-database
+
+  games-database:
+    image: mongo:5.0.6
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "coin-hunt"
+      MONGO_INITDB_ROOT_PASSWORD: "coin-hunt-auth"
+      MONGO_INITDB_DATABASE: "games-db"
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./games/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  users-api:
+    build:
+      context: ./users/
+    ports:
+      - "9122:9122"
+    stop_signal: SIGINT
+    environment:
+      USERS_DATABASE: "users-database"
+    depends_on:
+      - users-database
+
+  users-database:
+    image: mongo:5.0.6
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "coin-hunt"
+      MONGO_INITDB_ROOT_PASSWORD: "coin-hunt-auth"
+      MONGO_INITDB_DATABASE: "users-db"
+    ports:
+      - "27021:27017"
+    volumes:
+      - ./users/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

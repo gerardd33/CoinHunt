@@ -9,6 +9,8 @@ services:
     stop_signal: SIGINT
     environment:
       USERS_DATABASE: "database"
+    depends_on:
+      - database
 
   database:
     image: mongo:5.0.6
