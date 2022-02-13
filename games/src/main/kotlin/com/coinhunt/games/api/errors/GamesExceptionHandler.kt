@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 
 @ControllerAdvice
-class ExceptionHandler {
+class GamesExceptionHandler {
 
     @ExceptionHandler(BadRequestException::class)
-    fun handleInvalidRequest(ex: BadRequestException): ResponseEntity<String> {
+    fun handleBadRequest(ex: BadRequestException): ResponseEntity<String> {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ex.message)
@@ -27,7 +27,7 @@ class ExceptionHandler {
     fun handleUnexpectedException(ex: Exception): ResponseEntity<Any> {
         return ResponseEntity
             .internalServerError()
-            .body(mapOf(Pair("message", UNEXPECTED_ERROR_MESSAGE), Pair("exception", ex)))
+            .body(mapOf(Pair("message", UNEXPECTED_ERROR_MESSAGE), Pair("reason", ex.message), Pair("exception", ex)))
     }
 
     companion object {
