@@ -1,18 +1,14 @@
-package com.coinhunt.games.persistence.domain.documents
+package com.coinhunt.games.api.dtos
 
 import com.coinhunt.games.persistence.domain.components.Difficulty
 import com.coinhunt.games.persistence.domain.components.GameStep
-import org.bson.types.ObjectId
-import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.Instant
 
 @Document
-data class CompletedGame(
+data class CompletedGameDto(
     val difficulty: Difficulty,
     val steps: List<GameStep>,
     val userId: String,
     val totalTimeInMilliseconds: Long,
-    val startTime: Instant,
-    @Id val id: ObjectId? = ObjectId.get()
+    val startTimeEpochMilli: Long,
 )

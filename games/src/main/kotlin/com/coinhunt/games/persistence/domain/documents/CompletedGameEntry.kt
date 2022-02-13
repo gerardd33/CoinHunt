@@ -10,5 +10,5 @@ data class CompletedGameEntry(
     val userId: Long,
     val totalTimeInMilliseconds: Long,
     val startTime: Instant,
-    @Id val id: ObjectId = ObjectId.get()
+    @Id val id: ObjectId? = ObjectId.get()
 )

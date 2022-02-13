@@ -12,5 +12,5 @@ data class LevelInfo(
     val mazeHeight: Int,
     val mazeWidth: Int,
     val numberOfCoins: Int,
-    @Id val id: ObjectId = ObjectId.get()
+    @Id val id: ObjectId? = ObjectId.get()
 )

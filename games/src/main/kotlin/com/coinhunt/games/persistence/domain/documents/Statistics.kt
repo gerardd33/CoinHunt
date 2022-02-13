@@ -10,5 +10,5 @@ data class Statistics(
     val numberOfGames: Long,
     val bestTimesInMilliseconds: Map<Difficulty, Long>,
     val averageTimesInMilliseconds: Map<Difficulty, Long>,
-    @Id val id: ObjectId = ObjectId.get()
+    @Id val id: ObjectId? = ObjectId.get()
 )
