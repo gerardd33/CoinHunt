@@ -23,6 +23,13 @@ class UsersExceptionHandler {
             .body(ex.message)
     }
 
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorized(ex: UnauthorizedException): ResponseEntity<String> {
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ex.message)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleUnexpectedException(ex: Exception): ResponseEntity<Any> {
         return ResponseEntity
