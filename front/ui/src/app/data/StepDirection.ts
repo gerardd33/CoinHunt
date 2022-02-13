@@ -1,6 +1,6 @@
 export enum StepDirection {
-  UP,
-  DOWN,
-  RIGHT,
-  LEFT
+  UP = 'UP',
+  DOWN = 'DOWN',
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT'
 }

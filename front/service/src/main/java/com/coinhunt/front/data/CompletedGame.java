@@ -19,4 +19,6 @@ public class CompletedGame {
 	private final long totalTimeInMilliseconds;
 
 	private final long startTime;
+
+	private final List<List<FieldContent>> maze;
 }

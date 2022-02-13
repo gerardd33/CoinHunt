@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CompletedGameEntry } from '../data/CompletedGameEntry';
 import { Difficulty } from '../data/Difficulty';
-
+import { CompletedGame } from '../data/CompletedGame';
+import { ReplayGameManager } from '../ReplayGameManager';
 
 @Component({
   selector: 'app-ranking',
@@ -13,14 +13,14 @@ export class RankingComponent implements OnInit {
   difficultyEnum = Difficulty;
 
   @Input()
-  entries: Array<CompletedGameEntry>;
+  entries: Array<CompletedGame>;
 
   @Output()
   difficultyChanged: EventEmitter<Difficulty> = new EventEmitter<Difficulty>();
 
   difficulty: Difficulty = Difficulty.HARD;
 
-  constructor() { }
+  constructor(private replayGameManager: ReplayGameManager) { }
 
   ngOnInit(): void {
   }
@@ -44,5 +44,9 @@ export class RankingComponent implements OnInit {
   getClassForActiveDifficultySwitcher(difficulty: Difficulty): string {
     if (this.difficulty !== difficulty) return '';
     return this.getBackgroundClass();
+  }
+
+  startReplay(completedGame: CompletedGame): void {
+    this.replayGameManager.startReplay(completedGame);
   }
 }

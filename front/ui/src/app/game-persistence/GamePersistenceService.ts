@@ -1,4 +1,3 @@
-import { CompletedGameEntry } from '../data/CompletedGameEntry';
 import { CompletedGame } from '../data/CompletedGame';
 import { Difficulty } from '../data/Difficulty';
 import { CompletedGameFilter } from '../data/CompletedGameFilter';
@@ -9,5 +8,5 @@ export abstract class GamePersistenceService extends Resource {
 
   abstract saveGame(game: CompletedGame): Observable<any>;
 
-  abstract retrieveBestGamesEntries(difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGameEntry>>
+  abstract retrieveBestGames(difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGame>>
 }

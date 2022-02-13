@@ -27,6 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpMazeResource } from './resources/maze/HttpMazeResource';
 import { HttpGamePersistenceService } from './game-persistence/HttpGamePersistenceService';
 import { HttpUserService } from './user/HttpUserService';
+import { ReplayGameComponent } from './game-replay/replay-game.component';
+import { ReplayGameManager } from './ReplayGameManager';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import { HttpUserService } from './user/HttpUserService';
     NavbarUserIndicatorComponent,
     LoginComponent,
     UserConfigurationComponent,
-    RankingComponent
+    RankingComponent,
+    ReplayGameComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import { HttpUserService } from './user/HttpUserService';
     { provide: MazeResource, useClass: HttpMazeResource },
     { provide: GamePersistenceService, useClass: HttpGamePersistenceService },
     { provide: UserService, useClass: HttpUserService },
-    PlayGameManager
+    PlayGameManager,
+    ReplayGameManager
   ],
   bootstrap: [AppComponent]
 })

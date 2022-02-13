@@ -2,12 +2,13 @@ package com.coinhunt.front;
 
 import com.coinhunt.front.data.AuthTokenResponse;
 import com.coinhunt.front.data.CompletedGame;
-import com.coinhunt.front.data.CompletedGameEntry;
 import com.coinhunt.front.data.Credentials;
 import com.coinhunt.front.data.Difficulty;
 import com.coinhunt.front.data.FieldContent;
+import com.coinhunt.front.data.GameStep;
 import com.coinhunt.front.data.LevelInfo;
 import com.coinhunt.front.data.Statistics;
+import com.coinhunt.front.data.StepDirection;
 import com.coinhunt.front.data.UserData;
 import com.coinhunt.front.data.UserIdResponse;
 import java.util.List;
@@ -52,11 +53,7 @@ public class RequestHandler {
 		// TODO - call Games
 
 		return new ResponseEntity<>(
-				List.of(
-					List.of(FieldContent.PLAYER, FieldContent.EMPTY, FieldContent.COIN),
-					List.of(FieldContent.EMPTY, FieldContent.WALL, FieldContent.EMPTY),
-					List.of(FieldContent.COIN, FieldContent.EMPTY, FieldContent.WALL)
-				),
+				getMaze(),
 				HttpStatus.OK
 		);
 	}
@@ -78,17 +75,17 @@ public class RequestHandler {
 	}
 
 	@GetMapping("api/leaderboard/")
-	public List<CompletedGameEntry> handleBestScoresRequest(@RequestParam(value = "difficulty") String difficulty, @RequestParam(value = "filter") String filter) {
+	public List<CompletedGame> handleBestScoresRequest(@RequestParam(value = "difficulty") String difficulty, @RequestParam(value = "filter") String filter) {
 		// TODO - call Games
 
 		return List.of(
-				new CompletedGameEntry("user1id", 0, 0),
-				new CompletedGameEntry("user2id", 1, 1)
+				new CompletedGame(Difficulty.EASY, getSteps(), "user1id", 0, 0, getMaze()),
+				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 1, 1, getMaze())
 		);
 	}
 
 	@GetMapping("api/user/best-scores/")
-	public List<CompletedGameEntry> handleUserBestScoresRequest(
+	public List<CompletedGame> handleUserBestScoresRequest(
 			@RequestParam(value = "userId") String userId,
 			@RequestParam(value = "difficulty") String difficulty,
 			@RequestParam(value = "filter") String filter
@@ -96,8 +93,8 @@ public class RequestHandler {
 		// TODO - call Games
 
 		return List.of(
-				new CompletedGameEntry("user2id", 10, 10),
-				new CompletedGameEntry("user2id", 11, 11)
+				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 10, 10, getMaze()),
+				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 11, 11, getMaze())
 		);
 	}
 
@@ -152,6 +149,25 @@ public class RequestHandler {
 		// TODO - call Users
 
 		return new ResponseEntity<>(new UserIdResponse("userrr1"), HttpStatus.OK);
+	}
+
+	private List<List<FieldContent>> getMaze() {
+		return List.of(
+				List.of(FieldContent.PLAYER, FieldContent.EMPTY, FieldContent.COIN),
+				List.of(FieldContent.EMPTY, FieldContent.WALL, FieldContent.EMPTY),
+				List.of(FieldContent.COIN, FieldContent.EMPTY, FieldContent.WALL)
+		);
+	}
+
+	private List<GameStep> getSteps() {
+		return List.of(
+				new GameStep(StepDirection.DOWN, 1000),
+				new GameStep(StepDirection.UP, 1000),
+				new GameStep(StepDirection.DOWN, 1000),
+				new GameStep(StepDirection.UP, 1000),
+				new GameStep(StepDirection.DOWN, 1000),
+				new GameStep(StepDirection.UP, 1000)
+		);
 	}
 
 }
