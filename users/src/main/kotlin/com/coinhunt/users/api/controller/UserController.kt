@@ -1,5 +1,6 @@
 package com.coinhunt.users.api.controller
 
+import com.coinhunt.users.domain.UserCredentials
 import com.coinhunt.users.domain.UserData
 import com.coinhunt.users.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,15 +25,13 @@ class UserController(
     return userService.retrieveUserData(userId)
   }
 
-  // TODO implement actual JWT processing
-  @GetMapping("/login/{userId}")
-  fun loginUser(@PathVariable userId: String): String {
-    return "dummy JWT"
+  @PostMapping("/login")
+  fun loginUser(@RequestBody userCredentials: UserCredentials): String {
+    return userService.loginUser(userCredentials)
   }
 
-  // TODO implement actual JWT processing
-  @GetMapping("/authenticate")
-  fun authenticateUser(@RequestBody jwt: String): String {
-    return "dummy corresponding userId"
+  @PostMapping("/authenticate")
+  fun authenticateUser(@RequestBody jwtToken: String): String {
+    return userService.authenticateUser(jwtToken)
   }
 }

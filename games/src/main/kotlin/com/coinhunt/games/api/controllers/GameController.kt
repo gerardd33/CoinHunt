@@ -3,11 +3,10 @@ package com.coinhunt.games.api.controllers
 import com.coinhunt.games.api.dtos.CompletedGameDto
 import com.coinhunt.games.api.dtos.LevelInfoDto
 import com.coinhunt.games.api.dtos.MazeDto
-import com.coinhunt.games.api.errors.BadRequestException
 import com.coinhunt.games.api.mappers.CompletedGameDtoMapper
 import com.coinhunt.games.api.mappers.LevelInfoDtoMapper
 import com.coinhunt.games.api.mappers.MazeDtoMapper
-import com.coinhunt.games.persistence.domain.components.Difficulty
+import com.coinhunt.games.common.GamesUtils.parseDifficulty
 import com.coinhunt.games.services.GameService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -37,10 +36,5 @@ class GameController(
     @GetMapping("/new/{difficulty}")
     fun getNewGeneratedMaze(@PathVariable difficulty: String): MazeDto {
         return mazeDtoMapper.domainToDto(gameService.generateNewMaze(parseDifficulty(difficulty)))
-    }
-
-    private fun parseDifficulty(difficultyString: String): Difficulty {
-        return Difficulty.values().firstOrNull { it.name == difficultyString.uppercase() }
-            ?: throw BadRequestException("Difficulty level ${difficultyString.uppercase()} does not exist")
     }
 }

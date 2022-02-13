@@ -1,11 +1,14 @@
 package com.coinhunt.users.controller
 
+import com.coinhunt.users.common.SecurityUtils
+import com.coinhunt.users.domain.UserCredentials
 import com.coinhunt.users.domain.UserData
 import com.coinhunt.users.repository.UserDataRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -91,12 +94,62 @@ class UserControllerTest(
 
     @Test
     fun `returns 404 Not Found if user does not exist in the database`() {
-        val userData = UserData(userId = "__john", email = "john__@gmail.com", passwordHash = "fjsdi932m")
-        every { userDataRepository.findAllByUserId("__john") } returns listOf()
+        val input = UserData(userId = "userxx2", email = "xxuser@gmail.com", passwordHash = "dj32k4fgs9k")
+        every { userDataRepository.findAllByEmail("xxuser@gmail.com") } returns
+                listOf(UserData("-", "xxuser@gmail.com", "-"))
+        every { userDataRepository.findAllByUserId("userxx2") } returns listOf()
 
-        mockMvc.get("/user/data/${userData.userId}")
-            .andExpect {
-                status { isNotFound() }
-            }
+        mockMvc.post("/user/register") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(input)
+        }.andExpect {
+            status { isBadRequest() }
+            content { string("A user with email ${input.email} already exists") }
+        }
+    }
+
+    @Test
+    fun `returns 401 Unauthorized if passed JWT token is invalid`() {
+        val input = "382nfmcre9932fmclfdxc32kd932k9d9k2391mmdj29"
+        every { userDataRepository.findAllByUserId(any()) } returns listOf(UserData("", "", ""))
+
+        mockMvc.post("/user/authenticate") {
+            content = input
+        }.andExpect {
+            status { isUnauthorized() }
+        }
+    }
+
+    @Test
+    fun `returns 401 Unauthorized if password for user in incorrect`() {
+        val input = UserCredentials("someUser", "12345")
+        every { userDataRepository.findAllByUserId("someUser") } returns
+                listOf(UserData("someUser", "someUser@gmail.com", "xxxx"))
+
+        mockMvc.post("/user/login") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(input)
+        }.andExpect {
+            status { isUnauthorized() }
+        }
+    }
+
+    @Test
+    fun `returns a newly generated JWT token if password for user in correct`() {
+        val password = "12345"
+        val passwordHash = SecurityUtils.hashPassword(password)
+        val userId = "someUser"
+        val input = UserCredentials(userId, password)
+        every { userDataRepository.findAllByUserId(userId) } returns
+                listOf(UserData(userId, "someUser@gmail.com", passwordHash))
+
+        val responseBody = mockMvc.post("/user/login") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(input)
+        }.andExpect {
+            status { isOk() }
+        }.andReturn().response.contentAsString
+
+        assertThat(responseBody).isNotBlank
     }
 }
