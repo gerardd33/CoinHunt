@@ -11,8 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.schema.JsonSchemaProperty.string
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @SpringBootTest
@@ -71,5 +73,30 @@ class UserControllerTest(
             status { isBadRequest() }
             content { string("A user with email ${input.email} already exists") }
         }
+    }
+
+    @Test
+    fun `returns user data if user exists in the database`() {
+        val userData = UserData(userId = "__john", email = "john__@gmail.com", passwordHash = "fjsdi932m")
+        every { userDataRepository.findAllByUserId("__john") } returns listOf(userData)
+
+        mockMvc.get("/user/data/${userData.userId}")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.userId") { string(userData.userId) }
+                jsonPath("$.email") { string(userData.email) }
+                jsonPath("$.passwordHash") { string(userData.passwordHash) }
+            }
+    }
+
+    @Test
+    fun `returns 404 Not Found if user does not exist in the database`() {
+        val userData = UserData(userId = "__john", email = "john__@gmail.com", passwordHash = "fjsdi932m")
+        every { userDataRepository.findAllByUserId("__john") } returns listOf()
+
+        mockMvc.get("/user/data/${userData.userId}")
+            .andExpect {
+                status { isNotFound() }
+            }
     }
 }

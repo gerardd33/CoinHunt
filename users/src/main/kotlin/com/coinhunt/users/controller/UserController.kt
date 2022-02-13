@@ -18,4 +18,9 @@ class UserController(
     userService.registerUser(userData)
     return userData
   }
+
+  @GetMapping("/data/{userId}")
+  fun getUserData(@PathVariable userId: String): UserData {
+    return userService.retrieveUserData(userId)
+  }
 }

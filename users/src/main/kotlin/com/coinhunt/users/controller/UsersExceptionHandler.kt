@@ -9,10 +9,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class UsersExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgument(ex: IllegalArgumentException): ResponseEntity<String> {
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequest(ex: BadRequestException): ResponseEntity<String> {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
+            .body(ex.message)
+    }
+
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFound(ex: NotFoundException): ResponseEntity<String> {
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
             .body(ex.message)
     }
 
