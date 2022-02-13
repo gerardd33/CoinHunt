@@ -8,7 +8,7 @@ export abstract class UserService {
 
   abstract isUserLoggedIn(): boolean;
 
-  abstract getLoggedInUserId(): number;
+  abstract getLoggedInUserId(): string;
 
   abstract getLoggedInUsername(): string;
 }

@@ -3,6 +3,7 @@ import { CompletedGameEntry } from '../data/CompletedGameEntry';
 import { GamePersistenceService } from '../game-persistence/GamePersistenceService';
 import { Difficulty } from '../data/Difficulty';
 import { CompletedGameFilter } from '../data/CompletedGameFilter';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-leaderboards',
@@ -26,12 +27,20 @@ export class LeaderboardsComponent implements OnInit {
 
   updateLastWeekLeaderboard(newDifficulty: Difficulty) {
     this.lastWeekDifficulty = newDifficulty;
-    this.lastWeekEntries = this.gamePersistenceService.retrieveBestGamesEntries(this.lastWeekDifficulty, CompletedGameFilter.LAST_WEEK);
+    this.gamePersistenceService.retrieveBestGamesEntries(this.lastWeekDifficulty, CompletedGameFilter.BEST_WEEK)
+      .pipe(take(1))
+      .subscribe(entries => {
+        this.lastWeekEntries = entries;
+      });
   }
 
   updateAllTimeLeaderboard(newDifficulty: Difficulty) {
     this.allTimeDifficulty = newDifficulty;
-    this.allTimeEntries = this.gamePersistenceService.retrieveBestGamesEntries(this.allTimeDifficulty, CompletedGameFilter.LAST_WEEK);
+    this.gamePersistenceService.retrieveBestGamesEntries(this.allTimeDifficulty, CompletedGameFilter.BEST_ALL_TIME)
+      .pipe(take(1))
+      .subscribe(entries => {
+        this.allTimeEntries = entries;
+      });
   }
 
 }

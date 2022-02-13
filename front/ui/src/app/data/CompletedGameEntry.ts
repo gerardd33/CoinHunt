@@ -1,5 +1,5 @@
 export interface CompletedGameEntry {
-  username: string,
+  userId: string,
   totalTimeInMilliseconds: number,
   startTime: number
 }

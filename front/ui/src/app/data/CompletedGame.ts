@@ -4,7 +4,7 @@ import { GameStep } from './GameStep';
 export interface CompletedGame {
   difficulty: Difficulty,
   steps: Array<GameStep>,
-  userId: number,
+  userId: string,
   totalTimeInMilliseconds: number,
   startTime: number
 }

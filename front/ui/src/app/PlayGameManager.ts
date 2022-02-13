@@ -81,10 +81,12 @@ export class PlayGameManager {
 
   saveGame(): void {
     let completedGame: CompletedGame = this.createCompletedGame();
-    this.gamePersistenceService.saveGame(completedGame);
-
-    this.nextStatus(PlayGameStatus.NONE);
-    this.router.navigate(['/main']).then();
+    this.gamePersistenceService.saveGame(completedGame)
+        .pipe(take(1))
+        .subscribe(_ => {
+          this.nextStatus(PlayGameStatus.NONE);
+          this.router.navigate(['/main']).then();
+        });
   }
 
   move(direction: StepDirection): void {

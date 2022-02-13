@@ -2,7 +2,7 @@ import { UserService } from './UserService';
 import { Injectable } from '@angular/core';
 
 interface UserData {
-  userId: number,
+  userId: string,
   username: string,
   password: string
 }
@@ -11,35 +11,35 @@ interface UserData {
 export class InMemoryUserService extends UserService {
 
   userDataByUsername: Map<string, UserData> = new Map<string, UserData>();
-  userDataByUserId: Map<number, UserData> = new Map<number, UserData>();
+  userDataByUserId: Map<string, UserData> = new Map<string, UserData>();
 
   userLoggedIn: boolean = false;
 
   loggedInUserData: UserData;
 
-  nextUserId: number = 3;
+  nextUserId: string = "xd";
 
   constructor() {
     super();
 
     this.userDataByUsername.set('user1', {
-      userId: 1,
+      userId: "user1id",
       username: 'user1',
       password: 'password1'
     });
     this.userDataByUsername.set('user2', {
-      userId: 2,
+      userId: "user2id",
       username: 'user2',
       password: 'password2'
     });
 
-    this.userDataByUserId.set(1, {
-      userId: 1,
+    this.userDataByUserId.set("user1id", {
+      userId: "user1id",
       username: 'user1',
       password: 'password1'
     });
-    this.userDataByUserId.set(2, {
-      userId: 2,
+    this.userDataByUserId.set("user2id", {
+      userId: "user2id",
       username: 'user2',
       password: 'password2'
     });
@@ -69,8 +69,6 @@ export class InMemoryUserService extends UserService {
       password: password
     };
 
-    this.nextUserId++;
-
     this.userDataByUsername.set(username, newUserData);
     this.userDataByUserId.set(newUserData.userId, newUserData);
 
@@ -88,7 +86,7 @@ export class InMemoryUserService extends UserService {
     return this.userLoggedIn;
   }
 
-  getLoggedInUserId(): number {
+  getLoggedInUserId(): string {
     if (!this.isUserLoggedIn()) throw new Error("No user logged in");
 
     return this.loggedInUserData.userId;

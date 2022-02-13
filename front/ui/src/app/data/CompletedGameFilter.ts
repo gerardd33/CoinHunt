@@ -1,5 +1,5 @@
 export enum CompletedGameFilter {
-  BEST,
-  LAST_WEEK,
-  ALL_TIME,
+  BEST = "BEST",
+  BEST_WEEK = "LAST_WEEK",
+  BEST_ALL_TIME = "ALL_TIME"
 }

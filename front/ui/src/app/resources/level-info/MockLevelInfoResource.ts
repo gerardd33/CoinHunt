@@ -13,20 +13,26 @@ export class MockLevelInfoResource extends LevelInfoResource {
     super();
 
     this.levelInfoByDifficulty.set(Difficulty.EASY, {
+      difficulty: Difficulty.EASY,
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      mazeDimension: 5,
+      mazeWidth: 5,
+      mazeHeight: 5,
       numberOfCoins: 2
     });
 
     this.levelInfoByDifficulty.set(Difficulty.MEDIUM, {
+      difficulty: Difficulty.MEDIUM,
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      mazeDimension: 10,
+      mazeWidth: 10,
+      mazeHeight: 10,
       numberOfCoins: 5
     });
 
     this.levelInfoByDifficulty.set(Difficulty.HARD, {
+      difficulty: Difficulty.HARD,
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-      mazeDimension: 20,
+      mazeWidth: 10,
+      mazeHeight: 10,
       numberOfCoins: 7
     });
   }

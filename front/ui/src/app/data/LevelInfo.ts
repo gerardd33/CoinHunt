@@ -1,5 +1,9 @@
+import { Difficulty } from './Difficulty';
+
 export interface LevelInfo {
+  difficulty: Difficulty,
   description: string,
-  mazeDimension: number,
+  mazeHeight: number,
+  mazeWidth: number,
   numberOfCoins: number
 }
