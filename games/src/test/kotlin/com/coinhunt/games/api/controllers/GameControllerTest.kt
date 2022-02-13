@@ -2,6 +2,7 @@ package com.coinhunt.games.api.controllers
 
 import com.coinhunt.games.api.dtos.LevelInfoDto
 import com.coinhunt.games.persistence.domain.components.Difficulty
+import com.coinhunt.games.persistence.domain.documents.LevelInfo
 import com.coinhunt.games.persistence.repositories.LevelInfoRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -67,6 +68,50 @@ class GameControllerTest(
             content = objectMapper.writeValueAsString(input)
         }.andExpect {
             status { isBadRequest() }
+        }
+    }
+
+    @Test
+    fun `returns metadata for all valid difficulty levels if level infos are present`() {
+        val inputs = listOf("easy", "medium", "hard")
+        val difficulties = listOf(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD)
+
+        for (difficulty in difficulties) {
+            val dummyLevelInfo = LevelInfo(
+                difficulty, description = "some description",
+                mazeHeight = 12, mazeWidth = 30, numberOfCoins = 20
+            )
+            every { levelInfoRepository.findOneByDifficulty(difficulty) } returns dummyLevelInfo
+        }
+
+        for (difficulty in inputs) {
+            mockMvc.get("/game/info/$difficulty")
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.difficulty") { value(difficulty.uppercase()) }
+                    jsonPath("$.description") { isNotEmpty() }
+                    jsonPath("$.mazeHeight") { isNumber() }
+                    jsonPath("$.mazeWidth") { isNumber() }
+                    jsonPath("$.numberOfCoins") { isNumber() }
+                }
+        }
+    }
+
+    @Test
+    fun `returns a generated grid for all difficulty levels if level infos are present`() {
+        val inputs = listOf("easy", "medium", "hard")
+        every { levelInfoRepository.findOneByDifficulty(any()) } returns
+                LevelInfo(
+                    Difficulty.MEDIUM, description = "some description",
+                    mazeHeight = 12, mazeWidth = 30, numberOfCoins = 20
+                )
+
+        for (difficulty in inputs) {
+            mockMvc.get("/game/new/$difficulty")
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$.grid") { isArray() } }
+                }
         }
     }
 }
