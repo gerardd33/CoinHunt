@@ -1,9 +1,7 @@
 import { UserService } from './UserService';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of, Subject, take } from 'rxjs';
-import { UserIdResponse } from '../data/UserIdResponse';
-import { AuthTokenResponse } from '../data/AuthTokenResponse';
+import { map, Observable, of, Subject } from 'rxjs';
 
 @Injectable()
 export class HttpUserService extends UserService {
@@ -22,20 +20,18 @@ export class HttpUserService extends UserService {
   getLoggedInUserId(): Observable<string> {
     if (this.userLoggedIn) return of(this.loggedInUserId);
 
-    return this.http.get<UserIdResponse>(`${this.baseUrl}/api/account/auth`, {
+    return this.http.get<string>(`${this.baseUrl}/api/account/auth`, {
       headers: {
         Authorization: this.getToken() as string
       }
-    }).pipe(
-      map(userIdResponse => userIdResponse.userId)
-    );
+    });
   }
 
   isUserLoggedIn(): Observable<boolean> {
     if (!this.isTokenPresent()) return of(false);
     if (this.userLoggedIn) return of(true);
 
-    return this.http.get<UserIdResponse>(`${this.baseUrl}/api/account/auth`, {
+    return this.http.get<string>(`${this.baseUrl}/api/account/auth`, {
       headers: {
         Authorization: this.getToken() as string
       },
@@ -44,7 +40,7 @@ export class HttpUserService extends UserService {
       map(response => {
         if (response.status == 200) {
           this.userLoggedIn = true;
-          this.loggedInUserId = response.body?.userId as string;
+          this.loggedInUserId = response.body as string;
           return true;
         }
 
@@ -56,12 +52,12 @@ export class HttpUserService extends UserService {
   logIn(username: string, password: string): Observable<boolean> {
     const body = { userId: username, password: password };
 
-    return this.http.post<AuthTokenResponse>(`${this.baseUrl}/api/account/login`, body, {
+    return this.http.post<string>(`${this.baseUrl}/api/account/login`, body, {
       observe: 'response'
     }).pipe(
       map(response => {
         if (response.status === 200) {
-          localStorage.setItem(HttpUserService.TOKEN_LOCALSTORAGE_KEY, response.body?.token as string);
+          localStorage.setItem(HttpUserService.TOKEN_LOCALSTORAGE_KEY, response.body as string);
           this.loginChange$.next();
           return true;
         }
@@ -78,15 +74,13 @@ export class HttpUserService extends UserService {
   }
 
   register(username: string, password: string): Observable<boolean> {
-    const body = { userId: username, password: password };
+    const body = { userId: username, password: password, email: "xd@xd.xd" };
 
-    return this.http.post<AuthTokenResponse>(`${this.baseUrl}/api/account/register`, body, {
+    return this.http.post(`${this.baseUrl}/api/account/register`, body, {
       observe: 'response'
     }).pipe(
       map(response => {
         if (response.status === 200) {
-          localStorage.setItem(HttpUserService.TOKEN_LOCALSTORAGE_KEY, response.body?.token as string);
-          this.loginChange$.next();
           return true;
         }
 

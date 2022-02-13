@@ -9,5 +9,7 @@ public class UserData {
 
 	private final String userId;
 
-	private final Long dateOfJoin;
+	private final String email;
+
+	private final String password;
 }

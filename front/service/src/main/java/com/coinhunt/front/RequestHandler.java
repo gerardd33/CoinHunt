@@ -1,18 +1,13 @@
 package com.coinhunt.front;
 
-import com.coinhunt.front.data.AuthTokenResponse;
 import com.coinhunt.front.data.CompletedGame;
 import com.coinhunt.front.data.Credentials;
-import com.coinhunt.front.data.Difficulty;
 import com.coinhunt.front.data.FieldContent;
-import com.coinhunt.front.data.GameStep;
 import com.coinhunt.front.data.LevelInfo;
-import com.coinhunt.front.data.Statistics;
-import com.coinhunt.front.data.StepDirection;
 import com.coinhunt.front.data.UserData;
-import com.coinhunt.front.data.UserIdResponse;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,151 +17,179 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @CrossOrigin
 public class RequestHandler {
 
-//	private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+	private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+
+	private final String gamesBaseUrl = "http://localhost:8080";
+
+	private final String usersBaseUrl = "http://localhost:8080";
+
+	private final RestTemplate restTemplate;
+
+	public RequestHandler(RestTemplateBuilder restTemplateBuilder) {
+		this.restTemplate = restTemplateBuilder.build();
+	}
 
 	@GetMapping("api/difficulty/info/")
 	public ResponseEntity<LevelInfo> handleGameInfoRequest(@RequestParam(value = "difficulty") String difficulty) {
-		// TODO - call Games
-
-		return new ResponseEntity<>(
-				new LevelInfo(Difficulty.valueOf(difficulty), "Test description", 3, 3, 1),
-				HttpStatus.OK
+		ResponseEntity<LevelInfo> gamesResponse =  restTemplate.getForEntity(
+				String.format("%s/game/info/%s", this.gamesBaseUrl, difficulty),
+				LevelInfo.class
 		);
+
+		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return gamesResponse;
 	}
 
 	@GetMapping("api/game/new/")
-	public ResponseEntity<List<List<FieldContent>>> handleNewGameRequest(
+	public ResponseEntity<FieldContent[][]> handleNewGameRequest(
 			@RequestParam(value = "difficulty") String difficulty,
 			@RequestHeader(value = "Authorization") String authorizationHeader
 	) {
-		ResponseEntity<UserIdResponse> authenticationResponse = authenticate(authorizationHeader);
+		ResponseEntity<String> authenticationResponse = authenticate(authorizationHeader);
 
 		if (authenticationResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		} else if (authenticationResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		// TODO - call Games
-
-		return new ResponseEntity<>(
-				getMaze(),
-				HttpStatus.OK
+		ResponseEntity<FieldContent[][]> gamesResponse = restTemplate.getForEntity(
+				String.format("%s/game/new/%s", this.gamesBaseUrl, difficulty),
+				FieldContent[][].class
 		);
+
+		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return gamesResponse;
 	}
 
 	@PostMapping("api/game/save")
-	public ResponseEntity handleSaveGameRequest(
+	public ResponseEntity<?> handleSaveGameRequest(
 			@RequestBody CompletedGame completedGame,
 			@RequestHeader(value = "Authorization") String authorizationHeader
 	) {
-		ResponseEntity<UserIdResponse> authenticationResponse = authenticate(authorizationHeader);
+		ResponseEntity<String> authenticationResponse = authenticate(authorizationHeader);
 
 		if (authenticationResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		} else if (authenticationResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		// TODO - call Games
+		ResponseEntity<?> gamesResponse = restTemplate.postForEntity(
+				String.format("%s/game/save", this.gamesBaseUrl),
+				completedGame,
+				Object.class
+		);
 
-		return new ResponseEntity(HttpStatus.OK);
+		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("api/leaderboard/")
-	public List<CompletedGame> handleBestScoresRequest(@RequestParam(value = "difficulty") String difficulty, @RequestParam(value = "filter") String filter) {
-		// TODO - call Games
-
-		return List.of(
-				new CompletedGame(Difficulty.EASY, getSteps(), "user1id", 0, 0, getMaze()),
-				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 1, 1, getMaze())
+	public ResponseEntity<CompletedGame[]> handleBestScoresRequest(
+			@RequestParam(value = "difficulty") String difficulty,
+			@RequestParam(value = "filter") String filter
+	) {
+		ResponseEntity<CompletedGame[]> gamesResponse = restTemplate.getForEntity(
+				String.format("%s/leaderboard/%s/%s", this.gamesBaseUrl, difficulty, filter),
+				CompletedGame[].class
 		);
+
+		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return gamesResponse;
 	}
 
 	@GetMapping("api/user/best-scores/")
-	public List<CompletedGame> handleUserBestScoresRequest(
+	public ResponseEntity<CompletedGame[]> handleUserBestScoresRequest(
 			@RequestParam(value = "userId") String userId,
 			@RequestParam(value = "difficulty") String difficulty,
 			@RequestParam(value = "filter") String filter
 	) {
-		// TODO - call Games
-
-		return List.of(
-				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 10, 10, getMaze()),
-				new CompletedGame(Difficulty.EASY, getSteps(), "user2id", 11, 11, getMaze())
+		ResponseEntity<CompletedGame[]> gamesResponse = restTemplate.getForEntity(
+				String.format("%s/leaderboard/user/%s/%s/%s", this.gamesBaseUrl, userId, difficulty, filter),
+				CompletedGame[].class
 		);
-	}
 
-	@GetMapping("api/user/stats/")
-	public Statistics handleUserStatsRequest(@RequestParam(value = "userId") String userId) {
-		// TODO - call Games
+		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-		return new Statistics(
-				123,
-				Map.of(
-						Difficulty.EASY, 1,
-						Difficulty.MEDIUM, 2,
-						Difficulty.HARD, 3
-				),
-				Map.of(
-						Difficulty.EASY, 1,
-						Difficulty.MEDIUM, 2,
-						Difficulty.HARD, 3
-				)
-		);
+		return gamesResponse;
 	}
 
 	@GetMapping("api/user/data")
-	public UserData handleUserDataRequest(@RequestParam(value = "userId") String userId) {
-		// TODO - call Users
+	public ResponseEntity<UserData> handleUserDataRequest(@RequestParam(value = "userId") String userId) {
+		ResponseEntity<UserData> usersResponse = restTemplate.getForEntity(
+				String.format("%s/user/data/%s", this.usersBaseUrl, userId),
+				UserData.class
+		);
 
-		return new UserData("user1", 123L);
+		if (usersResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		UserData data = usersResponse.getBody();
+		return new ResponseEntity<>(new UserData(data.getUserId(), data.getEmail(), null), HttpStatus.OK);
 	}
 
 	@PostMapping("api/account/register")
-	public ResponseEntity<AuthTokenResponse> handleRegisterRequest(@RequestBody Credentials credentials) {
-		// TODO - call Users
+	public ResponseEntity<?> handleRegisterRequest(@RequestBody UserData userData) {
+		ResponseEntity<?> usersResponse = restTemplate.postForEntity(
+				String.format("%s/user/register", this.usersBaseUrl),
+				userData,
+				UserData.class
+		);
 
-		return new ResponseEntity<>(new AuthTokenResponse("I am a token!"), HttpStatus.OK);
+		if (usersResponse.getStatusCode() != HttpStatus.CREATED) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("api/account/login")
-	public ResponseEntity<AuthTokenResponse> handleLoginRequest(@RequestBody Credentials credentials) {
-		// TODO - call Users
-
-		return new ResponseEntity<>(new AuthTokenResponse("I am a token!"), HttpStatus.OK);
-	}
-
-	@GetMapping("api/account/auth")
-	public ResponseEntity<UserIdResponse> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
-		// TODO - call Users
-
-		return new ResponseEntity<>(new UserIdResponse("userrr1"), HttpStatus.OK);
-	}
-
-	private ResponseEntity<UserIdResponse> authenticate(String authorizationHeader) {
-		// TODO - call Users
-
-		return new ResponseEntity<>(new UserIdResponse("userrr1"), HttpStatus.OK);
-	}
-
-	private List<List<FieldContent>> getMaze() {
-		return List.of(
-				List.of(FieldContent.PLAYER, FieldContent.EMPTY, FieldContent.COIN),
-				List.of(FieldContent.EMPTY, FieldContent.WALL, FieldContent.EMPTY),
-				List.of(FieldContent.COIN, FieldContent.EMPTY, FieldContent.WALL)
+	public ResponseEntity<String> handleLoginRequest(@RequestBody Credentials credentials) {
+		ResponseEntity<String> usersResponse = restTemplate.postForEntity(
+				String.format("%s/user/login", this.usersBaseUrl),
+				credentials,
+				String.class
 		);
+
+		if (usersResponse.getStatusCode() != HttpStatus.OK) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return usersResponse;
 	}
 
-	private List<GameStep> getSteps() {
-		return List.of(
-				new GameStep(StepDirection.DOWN, 1000),
-				new GameStep(StepDirection.UP, 1000),
-				new GameStep(StepDirection.DOWN, 1000),
-				new GameStep(StepDirection.UP, 1000),
-				new GameStep(StepDirection.DOWN, 1000),
-				new GameStep(StepDirection.UP, 1000)
+	@PostMapping("api/account/auth")
+	public ResponseEntity<String> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
+		return authenticate(authorizationHeader);
+	}
+
+	private ResponseEntity<String> authenticate(String authorizationHeader) {
+		return restTemplate.postForEntity(
+				String.format("%s/user/authenticate", this.usersBaseUrl),
+				authorizationHeader,
+				String.class
 		);
 	}
 
