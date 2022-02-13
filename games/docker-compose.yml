@@ -7,6 +7,8 @@ services:
     ports:
       - "9111:9111"
     stop_signal: SIGINT
+    environment:
+      DATABASE: database
 
   database:
     image: mongo:5.0.6
