@@ -30,8 +30,8 @@ class UserController(
     return userService.loginUser(userCredentials)
   }
 
-  @GetMapping("/authenticate")
-  fun authenticateUser(@RequestBody jwt: String): String {
-    return userService.authenticateUser(jwt)
+  @PostMapping("/authenticate")
+  fun authenticateUser(@RequestBody jwtToken: String): String {
+    return userService.authenticateUser(jwtToken)
   }
 }

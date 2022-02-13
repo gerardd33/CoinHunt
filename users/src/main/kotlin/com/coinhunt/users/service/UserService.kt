@@ -3,7 +3,9 @@ package com.coinhunt.users.service
 import com.coinhunt.users.api.errors.BadRequestException
 import com.coinhunt.users.api.errors.NotFoundException
 import com.coinhunt.users.api.errors.UnauthorizedException
-import com.coinhunt.users.common.UsersUtils.hashPassword
+import com.coinhunt.users.common.SecurityUtils.decodeJwtToken
+import com.coinhunt.users.common.SecurityUtils.encodeJwtToken
+import com.coinhunt.users.common.SecurityUtils.hashPassword
 import com.coinhunt.users.domain.UserCredentials
 import com.coinhunt.users.domain.UserData
 import com.coinhunt.users.repository.UserDataRepository
@@ -41,14 +43,15 @@ class UserService(
             throw UnauthorizedException("Entered password is incorrect: ${userCredentials.password}")
         }
 
-        // TODO return a newly generated JWT
-        return "dummy JWT"
+        return encodeJwtToken(userCredentials.userId)
     }
 
-    fun authenticateUser(jwt: String): String {
-        // TODO decipher the JWT, check the user credentials from the deciphered JWT,
-        //  if it's ok, return the user's login, otherwise return HTTP Unauthorized
+    fun authenticateUser(jwtToken: String): String {
+        val userId = decodeJwtToken(jwtToken)
+        if (userDataRepository.findAllByUserId(userId).isEmpty()) {
+            throw UnauthorizedException("User with ID $userId is not registered")
+        }
 
-        return "dummy login"
+        return userId
     }
 }
