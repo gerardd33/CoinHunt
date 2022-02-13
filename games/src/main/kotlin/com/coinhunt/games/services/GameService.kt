@@ -2,6 +2,8 @@ package com.coinhunt.games.services
 
 import com.coinhunt.games.api.errors.NotFoundException
 import com.coinhunt.games.persistence.domain.components.Difficulty
+import com.coinhunt.games.persistence.domain.components.FieldContent
+import com.coinhunt.games.persistence.domain.components.Maze
 import com.coinhunt.games.persistence.domain.documents.CompletedGame
 import com.coinhunt.games.persistence.domain.documents.LevelInfo
 import com.coinhunt.games.persistence.repositories.CompletedGameRepository
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class GameService(
     private val completedGameRepository: CompletedGameRepository,
-    private val levelInfoRepository: LevelInfoRepository
+    private val levelInfoRepository: LevelInfoRepository,
 ) {
 
     fun retrieveGameMetadata(difficulty: Difficulty): LevelInfo {
@@ -21,5 +23,29 @@ class GameService(
 
     fun saveCompletedGame(completedGame: CompletedGame) {
         completedGameRepository.save(completedGame)
+    }
+
+    fun generateNewMaze(difficulty: Difficulty): Maze {
+        val difficultyLevelInfo = levelInfoRepository.findOneByDifficulty(difficulty)
+            ?: throw NotFoundException("Level info for difficulty $difficulty could not be found")
+
+        // TODO implement real generation algorithm
+        val generatedGrid = (1..difficultyLevelInfo.mazeHeight).map { row ->
+            (1..difficultyLevelInfo.mazeWidth).map { column ->
+                generateMazeField(row, column)
+            }
+        }
+
+        return Maze(generatedGrid)
+    }
+
+    private fun generateMazeField(row: Int, column: Int): FieldContent {
+        return if (row == 1 && column == 1) FieldContent.PLAYER
+        else when ((0..2).random()) {
+            0 -> FieldContent.EMPTY
+            1 -> FieldContent.WALL
+            2 -> FieldContent.COIN
+            else -> FieldContent.WALL
+        }
     }
 }

@@ -81,4 +81,17 @@ class GamesIntegrationTest(
             completedGameRepository.deleteByUserId(input.userId)
         }
     }
+
+    @Test
+    fun `returns a generated grid for all difficulty levels`() {
+        val inputs = listOf("easy", "medium", "hard")
+
+        for (difficulty in inputs) {
+            mockMvc.get("/game/new/$difficulty")
+                .andExpect {
+                    status { isOk() }
+                    content { jsonPath("$.grid") { isArray() } }
+                }
+        }
+    }
 }
