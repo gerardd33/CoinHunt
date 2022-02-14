@@ -25,5 +25,5 @@ tasks.named('test') {
 }
 
 tasks.bootJar {
-	archiveFileName.set("games-app.jar")
+	archiveFileName.set("front-app.jar")
 }

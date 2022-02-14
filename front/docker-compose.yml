@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+
+  server:
+    build: .
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - "9133:9133"
+    networks:
+      - net
+    stop_signal: SIGINT
+
+networks:
+  net:
+    driver: bridge
