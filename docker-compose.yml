@@ -1,6 +1,19 @@
 version: "3.7"
 
 services:
+
+  front-server:
+    build:
+      context: ./front
+    volumes:
+      - ./front/:/usr/src/app/
+    ports:
+      - "9133:9133"
+    stop_signal: SIGINT
+    environment:
+      GAMES_API: "games-api:9111"
+      USERS_API: "users-api:9122"
+
   games-api:
     build:
       context: ./games/

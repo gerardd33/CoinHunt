@@ -8,6 +8,7 @@ import com.coinhunt.front.data.UserData;
 import com.coinhunt.front.data.UserIdResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,11 @@ public class RequestHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-	private final String gamesBaseUrl = "http://localhost:9111";
+	@Value("${api.games}")
+	private String gamesBaseUrl;
 
-	private final String usersBaseUrl = "http://localhost:9122";
+	@Value("${api.users}")
+	private String usersBaseUrl;
 
 	private final RestTemplate restTemplate;
 
@@ -153,6 +156,9 @@ public class RequestHandler {
 
 	@PostMapping("api/account/register")
 	public ResponseEntity<?> handleRegisterRequest(@RequestBody UserData userData) {
+		System.out.println(this.usersBaseUrl);
+		System.out.println(this.gamesBaseUrl);
+
 		ResponseEntity<?> usersResponse = restTemplate.postForEntity(
 				String.format("%s/user/register", this.usersBaseUrl),
 				userData,
