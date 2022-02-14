@@ -24,6 +24,16 @@ export class HttpGamePersistenceService extends GamePersistenceService {
     });
   }
 
+  retrieveBestGamesForUser(userId: string, difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGame>> {
+    return this.http.get<Array<CompletedGame>>(`${this.baseUrl}/api/user/best-scores/`, {
+      params: {
+        userId: userId,
+        difficulty: difficulty.toString(),
+        filter: filter.toString()
+      }
+    });
+  }
+
   saveGame(game: CompletedGame): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/game/save`, game, {
       headers: {

@@ -1,5 +1,6 @@
 import { Resource } from '../Resource';
 import { Observable } from 'rxjs';
+import { UserData } from '../data/UserData';
 
 export abstract class UserService extends Resource {
 
@@ -16,4 +17,6 @@ export abstract class UserService extends Resource {
   abstract getToken(): string | null;
 
   abstract selectLoginChange(): Observable<void>;
+
+  abstract retrieveUserData(userId: string): Observable<UserData | null>;
 }
