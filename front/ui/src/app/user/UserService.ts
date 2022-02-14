@@ -5,7 +5,7 @@ export abstract class UserService extends Resource {
 
   abstract logIn(username: string, password: string): Observable<boolean>;
 
-  abstract register(username: string, password: string): Observable<boolean>;
+  abstract register(username: string, email: string, password: string): Observable<boolean>;
 
   abstract logOut(): void;
 

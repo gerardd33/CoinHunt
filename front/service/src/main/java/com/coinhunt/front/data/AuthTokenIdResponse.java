@@ -5,9 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class GameStep {
+public class AuthTokenIdResponse {
 
-	private final StepDirection direction;
-
-	private final long millisecondsSinceLastStep;
+	private final String token;
 }

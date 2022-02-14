@@ -20,5 +20,5 @@ public class CompletedGame {
 
 	private final long startTime;
 
-	private final List<List<FieldContent>> maze;
+	private final MazeWrapper maze;
 }

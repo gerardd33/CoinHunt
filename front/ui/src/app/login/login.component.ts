@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   loginPassword: string;
 
   registerUsername: string;
+  registerEmail: string;
   registerPassword: string;
   registerRepeatedPassword: string;
 
@@ -39,19 +40,21 @@ export class LoginComponent implements OnInit {
   register() {
     if (this.registerPassword !== this.registerRepeatedPassword) {
       this.registerPassword = '';
+      this.registerEmail = '';
       this.registerUsername = '';
       this.registerRepeatedPassword = '';
 
       return;
     }
 
-    this.userService.register(this.registerUsername, this.registerPassword)
+    this.userService.register(this.registerUsername, this.registerEmail, this.registerPassword)
         .pipe(take(1))
         .subscribe(registered => {
           if (registered) {
             this.router.navigate(['/main']).then();
           } else {
             this.registerPassword = '';
+            this.registerEmail = '';
             this.registerUsername = '';
             this.registerRepeatedPassword = '';
           }

@@ -101,7 +101,7 @@ export class PlayGameManager {
     let now: number = Date.now();
     let timeFromPreviousStep: number = now - this.previousStepTime;
     this.previousStepTime = now;
-    this.steps.push({ stepDirection: direction, millisecondsSinceLastStep: timeFromPreviousStep });
+    this.steps.push({ direction: direction, millisecondsSinceLastStep: timeFromPreviousStep });
 
     if (this.getFieldOnLocation(newPlayerLocation) == FieldContent.COIN) {
       this.huntedCoins++;
@@ -252,7 +252,7 @@ export class PlayGameManager {
           userId: userId,
           totalTimeInMilliseconds: this.getGameDuration(),
           startTime: this.gameStartTime,
-          maze: this.initialMaze
+          maze: { grid: this.initialMaze }
         };
       })
     );

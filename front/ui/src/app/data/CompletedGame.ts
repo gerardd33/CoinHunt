@@ -1,6 +1,6 @@
 import { Difficulty } from './Difficulty';
 import { GameStep } from './GameStep';
-import { Maze } from './FieldContent';
+import { Maze, MazeResponse } from './FieldContent';
 
 export interface CompletedGame {
   difficulty: Difficulty,
@@ -8,5 +8,5 @@ export interface CompletedGame {
   userId: string,
   totalTimeInMilliseconds: number,
   startTime: number,
-  maze: Maze
+  maze: MazeResponse
 }

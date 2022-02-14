@@ -17,6 +17,6 @@ usersDb.userData.insertMany([
     {
         "userId": "___example_user",
         "email": "user@gmail.com",
-        "passwordHash": "54321"
+        "password": "54321"
     }
 ]);

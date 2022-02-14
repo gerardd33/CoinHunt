@@ -34,7 +34,7 @@ export class ReplayGameManager {
     this.nextStatus(ReplayGameStatus.IN_PROGRESS);
     this.router.navigate(['/replay']).then();
 
-    this.maze = completedGame.maze;
+    this.maze = completedGame.maze.grid;
     this.playerLocation = this.findPlayer(this.maze);
 
     this.notifyMazeChange();
@@ -71,7 +71,7 @@ export class ReplayGameManager {
     const step: GameStep = steps[index];
 
     this.nextTimeout = setTimeout(() => {
-      this.move(step.stepDirection);
+      this.move(step.direction);
       this.scheduleStep(index + 1, steps);
     }, step.millisecondsSinceLastStep);
   }

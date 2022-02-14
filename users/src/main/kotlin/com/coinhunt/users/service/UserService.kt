@@ -17,7 +17,7 @@ class UserService(
 ) {
 
     fun registerUser(userData: UserData) {
-        val userDataWithHashedPassword = userData.copy(passwordHash = hashPassword(userData.passwordHash))
+        val userDataWithHashedPassword = userData.copy(password = hashPassword(userData.password))
 
         if (userDataRepository.findAllByUserId(userData.userId).isNotEmpty()) {
             throw BadRequestException("A user with user ID (login) ${userData.userId} already exists")
@@ -39,7 +39,7 @@ class UserService(
         val hashedPassword = hashPassword(userCredentials.password)
         val storedDataForUser = retrieveUserData(userCredentials.userId)
 
-        if (hashedPassword != storedDataForUser.passwordHash) {
+        if (hashedPassword != storedDataForUser.password) {
             throw UnauthorizedException("Entered password is incorrect: ${userCredentials.password}")
         }
 

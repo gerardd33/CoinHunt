@@ -1,6 +1,6 @@
 import { StepDirection } from './StepDirection';
 
 export interface GameStep {
-  stepDirection: StepDirection,
+  direction: StepDirection,
   millisecondsSinceLastStep: number
 }

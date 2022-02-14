@@ -1,10 +1,11 @@
 package com.coinhunt.front;
 
+import com.coinhunt.front.data.AuthTokenIdResponse;
 import com.coinhunt.front.data.CompletedGame;
 import com.coinhunt.front.data.Credentials;
-import com.coinhunt.front.data.FieldContent;
 import com.coinhunt.front.data.LevelInfo;
 import com.coinhunt.front.data.UserData;
+import com.coinhunt.front.data.UserIdResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -25,9 +26,9 @@ public class RequestHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-	private final String gamesBaseUrl = "http://localhost:8080";
+	private final String gamesBaseUrl = "http://localhost:9111";
 
-	private final String usersBaseUrl = "http://localhost:8080";
+	private final String usersBaseUrl = "http://localhost:9122";
 
 	private final RestTemplate restTemplate;
 
@@ -50,7 +51,7 @@ public class RequestHandler {
 	}
 
 	@GetMapping("api/game/new/")
-	public ResponseEntity<FieldContent[][]> handleNewGameRequest(
+	public ResponseEntity<String> handleNewGameRequest(
 			@RequestParam(value = "difficulty") String difficulty,
 			@RequestHeader(value = "Authorization") String authorizationHeader
 	) {
@@ -62,9 +63,9 @@ public class RequestHandler {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		ResponseEntity<FieldContent[][]> gamesResponse = restTemplate.getForEntity(
+		ResponseEntity<String> gamesResponse = restTemplate.getForEntity(
 				String.format("%s/game/new/%s", this.gamesBaseUrl, difficulty),
-				FieldContent[][].class
+				String.class
 		);
 
 		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
@@ -93,7 +94,7 @@ public class RequestHandler {
 				Object.class
 		);
 
-		if (gamesResponse.getStatusCode() != HttpStatus.OK) {
+		if (gamesResponse.getStatusCode() != HttpStatus.CREATED) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -166,7 +167,7 @@ public class RequestHandler {
 	}
 
 	@PostMapping("api/account/login")
-	public ResponseEntity<String> handleLoginRequest(@RequestBody Credentials credentials) {
+	public ResponseEntity<AuthTokenIdResponse> handleLoginRequest(@RequestBody Credentials credentials) {
 		ResponseEntity<String> usersResponse = restTemplate.postForEntity(
 				String.format("%s/user/login", this.usersBaseUrl),
 				credentials,
@@ -177,12 +178,14 @@ public class RequestHandler {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return usersResponse;
+		return new ResponseEntity<>(new AuthTokenIdResponse(usersResponse.getBody()), HttpStatus.OK);
 	}
 
-	@PostMapping("api/account/auth")
-	public ResponseEntity<String> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
-		return authenticate(authorizationHeader);
+	@GetMapping("api/account/auth")
+	public ResponseEntity<UserIdResponse> handleAuthenticateRequest(@RequestHeader(value = "Authorization") String authorizationHeader) {
+		 ResponseEntity<String> usersResponse = authenticate(authorizationHeader);
+
+		 return new ResponseEntity<>(new UserIdResponse(usersResponse.getBody()), HttpStatus.OK);
 	}
 
 	private ResponseEntity<String> authenticate(String authorizationHeader) {

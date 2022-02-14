@@ -6,3 +6,7 @@ export enum FieldContent {
 }
 
 export type Maze = Array<Array<FieldContent>>;
+
+export interface MazeResponse {
+  grid: Maze
+}
