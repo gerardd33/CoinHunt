@@ -3,13 +3,13 @@
 
   <p>{{levelInfo.description}}</p>
 
-  Dimensions of the maze: {{levelInfo.mazeDimension}}x{{levelInfo.mazeDimension}}<br>
+  Dimensions of the maze: {{levelInfo.mazeWidth}}x{{levelInfo.mazeHeight}}<br>
   Number of coins: {{levelInfo.numberOfCoins}}<br>
 
   <button class="mt-3 btn btn-success btn-block"
-          [disabled]="!isUserLoggedIn()"
+          [disabled]="!isUserLoggedIn"
           (click)="initializeGame()">
     Start the game!
-    <i *ngIf="!isUserLoggedIn()" class="text-warning">You have to log in first.</i>
+    <i *ngIf="!isUserLoggedIn" class="text-warning">You have to log in first.</i>
   </button>
 </div>

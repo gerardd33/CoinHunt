@@ -41,11 +41,12 @@ class GameService(
 
     private fun generateMazeField(row: Int, column: Int): FieldContent {
         return if (row == 1 && column == 1) FieldContent.PLAYER
-        else when ((0..2).random()) {
-            0 -> FieldContent.EMPTY
-            1 -> FieldContent.WALL
-            2 -> FieldContent.COIN
-            else -> FieldContent.WALL
+        else {
+            val randomNumber = (0..100).random()
+
+            if (randomNumber in 1..5) FieldContent.COIN
+            else if (randomNumber in 5..10) FieldContent.WALL
+            else FieldContent.EMPTY
         }
     }
 }

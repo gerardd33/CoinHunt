@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Difficulty } from './data/Difficulty';
 import { Router } from '@angular/router';
 import { MazeResource } from './resources/maze/MazeResource';
-import { Observable, ReplaySubject, Subject, take } from 'rxjs';
+import { map, Observable, ReplaySubject, Subject, take } from 'rxjs';
 import { FieldContent, Maze } from './data/FieldContent';
 import { PlayGameStatus } from './PlayGameStatus';
 import { StepDirection } from './data/StepDirection';
@@ -19,6 +19,8 @@ export class PlayGameManager {
   private status: PlayGameStatus = PlayGameStatus.NONE;
 
   private maze: Maze;
+
+  private initialMaze: Maze;
 
   private difficulty: Difficulty;
 
@@ -54,6 +56,7 @@ export class PlayGameManager {
       .subscribe(maze => {
         this.difficulty = difficulty;
         this.maze = maze;
+        this.initialMaze = this.deepCopyOfMaze(maze);
         this.playerLocation = this.findPlayer(maze);
         this.allCoins = this.countCoins(maze);
         this.huntedCoins = 0;
@@ -80,11 +83,15 @@ export class PlayGameManager {
   }
 
   saveGame(): void {
-    let completedGame: CompletedGame = this.createCompletedGame();
-    this.gamePersistenceService.saveGame(completedGame);
-
-    this.nextStatus(PlayGameStatus.NONE);
-    this.router.navigate(['/main']).then();
+    this.createCompletedGame()
+        .subscribe(completedGame => {
+          this.gamePersistenceService.saveGame(completedGame)
+              .pipe(take(1))
+              .subscribe(_ => {
+                this.nextStatus(PlayGameStatus.NONE);
+                this.router.navigate(['/main']).then();
+              });
+        });
   }
 
   move(direction: StepDirection): void {
@@ -94,7 +101,7 @@ export class PlayGameManager {
     let now: number = Date.now();
     let timeFromPreviousStep: number = now - this.previousStepTime;
     this.previousStepTime = now;
-    this.steps.push({ direction: direction, millisecondsFromLastStep: timeFromPreviousStep });
+    this.steps.push({ direction: direction, millisecondsSinceLastStep: timeFromPreviousStep });
 
     if (this.getFieldOnLocation(newPlayerLocation) == FieldContent.COIN) {
       this.huntedCoins++;
@@ -219,14 +226,36 @@ export class PlayGameManager {
     return result;
   }
 
-  private createCompletedGame(): CompletedGame {
-    return {
-      difficulty: this.difficulty,
-      steps: this.steps,
-      userId: this.userService.getLoggedInUserId(),
-      totalTimeInMilliseconds: this.getGameDuration(),
-      startTime: this.gameStartTime
-    };
+  private deepCopyOfMaze(maze: Maze): Maze {
+    let copy: Maze = [];
+
+    for (let row of maze) {
+      let rowCopy = [];
+
+      for (let field of row) {
+        rowCopy.push(field);
+      }
+
+      copy.push(rowCopy);
+    }
+
+    return copy;
+  }
+
+  private createCompletedGame(): Observable<CompletedGame> {
+    return this.userService.getLoggedInUserId().pipe(
+      take(1),
+      map(userId => {
+        return {
+          difficulty: this.difficulty,
+          steps: this.steps,
+          userId: userId,
+          totalTimeInMilliseconds: this.getGameDuration(),
+          startTime: this.gameStartTime,
+          maze: { grid: this.initialMaze }
+        };
+      })
+    );
   }
 
 }

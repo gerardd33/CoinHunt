@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user/UserService';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-user-configuration',
@@ -13,9 +14,13 @@ export class UserConfigurationComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    if (!this.userService.isUserLoggedIn()) {
-      this.router.navigate(['/main']).then();
-    }
+    this.userService.isUserLoggedIn()
+      .pipe(take(1))
+      .subscribe(loggedIn => {
+        if (!loggedIn) {
+          this.router.navigate(['/main']).then();
+        }
+      });
   }
 
   logOut(): void {

@@ -25,9 +25,10 @@
 
   <tbody>
   <tr *ngFor="let entry of entries">
-    <td><b>{{entry.username}}</b></td>
+    <td><b>{{entry.userId}}</b></td>
     <td>{{entry.totalTimeInMilliseconds / 1000}}s</td>
     <td>{{entry.startTime}}</td>
+    <td><button class="btn btn-success" (click)="startReplay(entry)">Watch!</button></td>
   </tr>
   </tbody>
 

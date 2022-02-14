@@ -1,0 +1,11 @@
+<div class="play-window replay-background">
+  <div class="container text-center pt-5 d-grid">
+
+    <h1 class="mb-5">You are in a replay mode.</h1>
+
+    <app-maze [maze]="maze"></app-maze>
+
+    <button *ngIf="isFinished()" class="btn btn-success btn-block w-50 m-auto shadow mt-5" (click)="finishReplay()">Watch finished. Return to
+      leaderboards</button>
+  </div>
+</div>

@@ -22,8 +22,8 @@ export class MazeComponent implements OnInit {
     let dimension: number = this.maze.length;
 
     return {
-      'grid-template-columns': `repeat(${dimension}, 50px)`,
-      'grid-template-rows': `repeat(${dimension}, 50px)`
+      'grid-template-columns': `repeat(${dimension}, 10px)`,
+      'grid-template-rows': `repeat(${dimension}, 10px)`
     };
   }
 

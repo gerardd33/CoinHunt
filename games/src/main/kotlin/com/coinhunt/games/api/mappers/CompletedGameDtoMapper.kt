@@ -14,6 +14,12 @@ abstract class CompletedGameDtoMapper {
     @Mapping(source = "startTimeEpochMilli", target = "startTime", qualifiedByName = ["epochMilliToInstant"])
     abstract fun dtoToDomain(dto: CompletedGameDto): CompletedGame
 
+    @Mapping(source = "startTime", target = "startTimeEpochMilli", qualifiedByName = ["instantToEpochMilli"])
+    abstract fun domainToDto(domain: CompletedGame): CompletedGameDto
+
     @Named("epochMilliToInstant")
     fun epochMilliToInstant(epochMilli: Long?): Instant = Instant.ofEpochMilli(epochMilli!!)
+
+    @Named("instantToEpochMilli")
+    fun instantToEpochMilli(instant: Instant): Long = instant.toEpochMilli()
 }

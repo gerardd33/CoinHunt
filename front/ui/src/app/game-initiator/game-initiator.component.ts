@@ -20,12 +20,15 @@ export class GameInitiatorComponent implements OnInit {
 
   levelInfo: LevelInfo;
 
+  isUserLoggedIn: boolean = false;
+
   constructor(private levelInfoResource: LevelInfoResource,
               private playGameManager: PlayGameManager,
               private userService: UserService) { }
 
   ngOnInit(): void {
     this.retrieveLevelInfo();
+    this.retrieveIsUserLoggedIn();
   }
 
   getBackgroundClass(): string {
@@ -43,8 +46,12 @@ export class GameInitiatorComponent implements OnInit {
     this.playGameManager.initializeGame(this.difficulty);
   }
 
-  isUserLoggedIn(): boolean {
-    return this.userService.isUserLoggedIn();
+  retrieveIsUserLoggedIn(): void {
+    this.userService.isUserLoggedIn()
+      .pipe(take(1))
+      .subscribe(loggedIn => {
+        this.isUserLoggedIn = loggedIn;
+      });
   }
 
   private retrieveLevelInfo(): void {

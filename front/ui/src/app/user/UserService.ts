@@ -1,14 +1,19 @@
-export abstract class UserService {
+import { Resource } from '../Resource';
+import { Observable } from 'rxjs';
 
-  abstract logIn(username: string, password: string): boolean;
+export abstract class UserService extends Resource {
 
-  abstract register(username: string, password: string): boolean;
+  abstract logIn(username: string, password: string): Observable<boolean>;
+
+  abstract register(username: string, email: string, password: string): Observable<boolean>;
 
   abstract logOut(): void;
 
-  abstract isUserLoggedIn(): boolean;
+  abstract isUserLoggedIn(): Observable<boolean>;
 
-  abstract getLoggedInUserId(): number;
+  abstract getLoggedInUserId(): Observable<string>;
 
-  abstract getLoggedInUsername(): string;
+  abstract getToken(): string | null;
+
+  abstract selectLoginChange(): Observable<void>;
 }
