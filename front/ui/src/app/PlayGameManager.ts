@@ -129,7 +129,7 @@ export class PlayGameManager {
   }
 
   getGameDuration(): number {
-    return (this.gameEndTime - this.gameStartTime) / 1000;
+    return (this.gameEndTime - this.gameStartTime);
   }
 
   selectStatus(): Observable<PlayGameStatus> {
