@@ -29,6 +29,7 @@ import { HttpGamePersistenceService } from './game-persistence/HttpGamePersisten
 import { HttpUserService } from './user/HttpUserService';
 import { ReplayGameComponent } from './game-replay/replay-game.component';
 import { ReplayGameManager } from './ReplayGameManager';
+import { UserPageComponent } from './user-page/user-page.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ReplayGameManager } from './ReplayGameManager';
     LoginComponent,
     UserConfigurationComponent,
     RankingComponent,
-    ReplayGameComponent
+    ReplayGameComponent,
+    UserPageComponent
   ],
   imports: [
     BrowserModule,

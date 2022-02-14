@@ -6,6 +6,7 @@ import { PlayGameComponent } from './play-game/play-game.component';
 import { LoginComponent } from './login/login.component';
 import { UserConfigurationComponent } from './user-configuration/user-configuration.component';
 import { ReplayGameComponent } from './game-replay/replay-game.component';
+import { UserPageComponent } from './user-page/user-page.component';
 
 const routes: Routes = [
   { path: 'main', component: MainComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'replay', component: ReplayGameComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user-config', component: UserConfigurationComponent },
+  { path: 'user/:userId', component: UserPageComponent },
   { path: '**', component: MainComponent }
 ];
 

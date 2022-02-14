@@ -8,5 +8,7 @@ export abstract class GamePersistenceService extends Resource {
 
   abstract saveGame(game: CompletedGame): Observable<any>;
 
-  abstract retrieveBestGames(difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGame>>
+  abstract retrieveBestGames(difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGame>>;
+
+  abstract retrieveBestGamesForUser(userId: string, difficulty: Difficulty, filter: CompletedGameFilter): Observable<Array<CompletedGame>>;
 }

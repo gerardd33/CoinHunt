@@ -1,9 +1,10 @@
 import { UserService } from './UserService';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of, Subject } from 'rxjs';
+import { catchError, map, Observable, of, Subject } from 'rxjs';
 import { AuthTokenIdResponse } from '../data/AuthTokenIdResponse';
 import { UserIdResponse } from '../data/UserIdResponse';
+import { UserData } from '../data/UserData';
 
 @Injectable()
 export class HttpUserService extends UserService {
@@ -97,6 +98,18 @@ export class HttpUserService extends UserService {
 
   selectLoginChange(): Observable<void> {
     return this.loginChange$.asObservable();
+  }
+
+  retrieveUserData(userId: string): Observable<UserData | null> {
+    return this.http.get<UserData>(`${this.baseUrl}/api/user/data`, {
+      observe: 'response',
+      params: {
+        userId: userId
+      }
+    }).pipe(
+      map(response => response.body),
+      catchError(err => of(null))
+    );
   }
 
   private isTokenPresent(): boolean {

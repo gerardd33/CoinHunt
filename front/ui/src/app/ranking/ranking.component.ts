@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Difficulty } from '../data/Difficulty';
 import { CompletedGame } from '../data/CompletedGame';
 import { ReplayGameManager } from '../ReplayGameManager';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ranking',
@@ -20,7 +21,8 @@ export class RankingComponent implements OnInit {
 
   difficulty: Difficulty = Difficulty.HARD;
 
-  constructor(private replayGameManager: ReplayGameManager) { }
+  constructor(private replayGameManager: ReplayGameManager,
+              private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -48,5 +50,9 @@ export class RankingComponent implements OnInit {
 
   startReplay(completedGame: CompletedGame): void {
     this.replayGameManager.startReplay(completedGame);
+  }
+
+  navigateToUserPage(userId: string) {
+    this.router.navigate(['/user', userId]).then();
   }
 }
