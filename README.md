@@ -4,9 +4,10 @@ Coin Hunt is a maze-based game that lets you compete with your friends and other
 
 ## Technologies
 
-- Kotlin, Spring Boot, Java, Angular
+- Kotlin, Spring Boot, Java
+- Angular, Bootstrap
 - MongoDB, Docker, Varnish
-- MapStruct, JUnit, MockK
+- MapStruct, JJWT, JUnit, MockK
 
 
 ## Contributors
