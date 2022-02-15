@@ -1,4 +1,4 @@
 export abstract class Resource {
 
-  baseUrl: String = "http://front-server:9133";
+  baseUrl: String = "http://localhost:9133";
 }

@@ -21,8 +21,8 @@ services:
       - "9133:9133"
     stop_signal: SIGINT
     environment:
-      GAMES_API: "games-api:9111"
-      USERS_API: "users-api:9122"
+      GAMES_API: "http://games-api:9111"
+      USERS_API: "http://users-api:9122"
 
   games-api-1:
     build:
