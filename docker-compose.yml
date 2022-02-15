@@ -2,16 +2,6 @@ version: "3.7"
 
 services:
 
-  varnish:
-    image: varnish:6
-    ports:
-      - "9144:80"
-    volumes:
-      - ./varnish:/etc/varnish:ro
-    depends_on:
-      - games-api-1
-      - games-api-2
-
   front-server:
     build:
       context: ./front
@@ -24,22 +14,11 @@ services:
       GAMES_API: "http://games-api:9111"
       USERS_API: "http://users-api:9122"
 
-  games-api-1:
+  games-api:
     build:
       context: ./games/
     ports:
       - "9111:9111"
-    stop_signal: SIGINT
-    environment:
-      GAMES_DATABASE: "games-database"
-    depends_on:
-      - games-database
-
-  games-api-2:
-    build:
-      context: ./games/
-    ports:
-      - "9155:9155"
     stop_signal: SIGINT
     environment:
       GAMES_DATABASE: "games-database"
